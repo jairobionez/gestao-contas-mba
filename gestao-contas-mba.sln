@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35312.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestaoContas.Shared", "src\GestaoContas.Shared\GestaoContas.Shared.csproj", "{DB360C17-BA2F-434A-BC76-7A0139D40430}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestaoContas.Api", "src\GestaoContas.API\GestaoContas.Api.csproj", "{065899F9-F8CC-4051-885E-1C7CDBFA6C64}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DB360C17-BA2F-434A-BC76-7A0139D40430}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB360C17-BA2F-434A-BC76-7A0139D40430}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB360C17-BA2F-434A-BC76-7A0139D40430}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB360C17-BA2F-434A-BC76-7A0139D40430}.Release|Any CPU.Build.0 = Release|Any CPU
+		{065899F9-F8CC-4051-885E-1C7CDBFA6C64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{065899F9-F8CC-4051-885E-1C7CDBFA6C64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{065899F9-F8CC-4051-885E-1C7CDBFA6C64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{065899F9-F8CC-4051-885E-1C7CDBFA6C64}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AE292B40-3359-441F-B1C1-7FB406245933}
+	EndGlobalSection
+EndGlobal
