@@ -1,16 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace GestaoContas.Shared.Data
+namespace GestaoContas.Data.Contexts
 {
-    public class ApplicationDbContext : IdentityDbContext
+    //Mudar quando implementar o Identity para não gerar, ainda, as tabelas
+    //public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext()
         {
@@ -26,10 +22,11 @@ namespace GestaoContas.Shared.Data
             base.OnConfiguring(optionsBuilder);
             if (!optionsBuilder.IsConfigured)
             {
-                string path = Path.Combine(Directory.GetCurrentDirectory(), "Data");
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "Contexts");
+                string pathToConfigFile = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "src\\GestaoContas.Shared\\CommonConfigurations\\SharedSettings.json");
                 IConfigurationRoot configuration = new ConfigurationBuilder()
-                .SetBasePath(path)
-                .AddJsonFile("sharedsettings.json")
+                .SetBasePath(path)                
+                .AddJsonFile(pathToConfigFile)
                 .Build();
                 optionsBuilder.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
             }

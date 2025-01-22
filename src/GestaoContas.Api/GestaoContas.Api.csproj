@@ -13,6 +13,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\GestaoContas.Business\GestaoContas.Business.csproj" />
+	  <ProjectReference Include="..\GestaoContas.Data\GestaoContas.Data.csproj" />
 	  <ProjectReference Include="..\GestaoContas.Shared\GestaoContas.Shared.csproj" />
 	</ItemGroup>
 
