@@ -10,7 +10,7 @@ namespace GestaoContas.Shared.CommonConfigurations
             var sharedSettingsPath = builder.Configuration["SharedSettingsPath"];
             if (!string.IsNullOrEmpty(sharedSettingsPath))
             {
-                var sharedFolder = Path.Combine(builder.Environment.ContentRootPath, "..", sharedSettingsPath);
+                var sharedFolder = Path.Combine(builder.Environment.ContentRootPath, "..","..", sharedSettingsPath);
 
                 if (!string.IsNullOrEmpty(sharedSettingsPath))
                 {

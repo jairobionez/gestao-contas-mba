@@ -3,10 +3,10 @@
 namespace GestaoContas.Api.Controllers
 {
     [ApiController]
-    [Route("api/v1/gestao-contas/hello")]
+    [Route("api/v1/gestao-contas/[Controller]")]
     public class HelloController: ControllerBase
     {
-        [HttpGet]                
+        [HttpGet("obter-mensagem")]                
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<string> Get()
         {
