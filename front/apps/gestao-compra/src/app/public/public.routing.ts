@@ -10,7 +10,7 @@ const routes: Routes = [
     redirectTo: 'login',
   },
   {
-    path: 'login',
+    path: '',
     loadChildren: () => import('./login/login.module').then(m => m.LoginModule),
   }
 ]

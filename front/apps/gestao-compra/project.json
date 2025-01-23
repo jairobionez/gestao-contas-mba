@@ -20,9 +20,12 @@
           {
             "glob": "**/*",
             "input": "apps/gestao-compra/public"
-          }
+          },
+          "apps/gestao-compra/src/assets"
         ],
-        "styles": ["apps/gestao-compra/src/styles.scss"],
+        "styles": [
+          "apps/gestao-compra/src/styles.scss"
+        ],
         "scripts": []
       },
       "configurations": {
