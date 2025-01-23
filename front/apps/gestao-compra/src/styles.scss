@@ -1,1 +1,36 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+
+html {
+  color-scheme: light dark;
+  @include mat.theme((
+    color: mat.$violet-palette,
+    typography: (plain-family: '"Poppins", sans-serif',),
+    density: 0
+  ));
+}
+// @include mat.core();
+
+:root {
+  @include mat.button-overrides((
+    filled-container-color: #36F2CE,
+    filled-label-text-color: #15102E,
+    protected-label-text-color: #15102E,
+  ));
+}
+
+@import 'assets/scss/main';
+
+:root {
+  --cor-principal-h: 250;
+  --cor-principal-s: 48%;
+  --cor-principal-l: 12%;
+
+  --cor-principal: #15102E;
+  --cor-secundaria: #36F2CE;
+  --cor-terciaria: #1A5FF8;
+}
+
+// body {
+//   font-family: poppins, sans-serif;
+//   background-color: #f4f4f4;
+// }
