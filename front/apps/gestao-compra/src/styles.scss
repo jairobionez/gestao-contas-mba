@@ -2,20 +2,33 @@
 
 html {
   color-scheme: light dark;
-  @include mat.theme((
-    color: mat.$violet-palette,
-    typography: (plain-family: '"Poppins", sans-serif',),
-    density: 0
-  ));
+  @include mat.theme(
+    (
+      color: mat.$violet-palette,
+      typography: (
+        plain-family: '"Poppins", sans-serif',
+      ),
+      density: 0,
+    )
+  );
 }
 // @include mat.core();
 
 :root {
-  @include mat.button-overrides((
-    filled-container-color: #36F2CE,
-    filled-label-text-color: #15102E,
-    protected-label-text-color: #15102E,
-  ));
+  @include mat.button-overrides(
+    (
+      filled-container-color: #36f2ce,
+      filled-label-text-color: #15102e,
+      protected-label-text-color: #15102e,
+    )
+  );
+
+  @include mat.form-field-overrides(
+    (
+      container-height: 2rem,
+      container-vertical-padding: .35rem,
+    )
+  );
 }
 
 @import 'assets/scss/main';
@@ -25,9 +38,9 @@ html {
   --cor-principal-s: 48%;
   --cor-principal-l: 12%;
 
-  --cor-principal: #15102E;
-  --cor-secundaria: #36F2CE;
-  --cor-terciaria: #1A5FF8;
+  --cor-principal: #15102e;
+  --cor-secundaria: #36f2ce;
+  --cor-terciaria: #1a5ff8;
 }
 
 // body {
