@@ -148,6 +148,25 @@
   }
 }
 
+.font-subtitulo {
+  font-size: 1rem;
+  font-weight: 600;
+  position: relative;
+  margin-bottom: 1rem;
+
+
+  &:after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -$size-5;
+    height: $size-4;
+    width: 2rem;
+    background-color: $cor-secundaria;
+  }
+}
+
 .titulo,
 .titulo-sublinhado {
   font-size: 1.5rem;
@@ -294,4 +313,15 @@
 
 ngx-dropzone-preview, ngx-dropzone-image-preview {
   margin: 0 auto !important;
+}
+
+.content-error {
+  position: relative;
+  height: 2rem;
+
+  .invalid {
+    color: $cor-vermelho;
+    position: absolute;
+    right: 0;
+  }
 }

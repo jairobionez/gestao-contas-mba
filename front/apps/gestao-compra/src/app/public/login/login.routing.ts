@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login.component';
 import { FormLoginComponent } from './form-login/form-login.component';
+import { FormaNovaContaComponent } from './form-nova-conta/form-nova-conta.component';
 
 const routes: Routes = [
   {
@@ -11,6 +12,10 @@ const routes: Routes = [
       {
         path: 'login',
         component: FormLoginComponent
+      },
+      {
+        path: 'nova-conta',
+        component: FormaNovaContaComponent
       }
     ]
   }

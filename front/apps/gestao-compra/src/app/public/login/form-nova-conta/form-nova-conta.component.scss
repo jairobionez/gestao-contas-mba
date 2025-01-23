@@ -27,3 +27,11 @@
   align-items: center;
   justify-content: space-between;
 }
+
+
+.custom-form-field {
+  --mat-form-field-padding: 0px;       /* Remove o padding extra */
+  --mat-input-min-height: 32px;       /* Define a altura mínima */
+  --mat-form-field-outline-width: 1px; /* Ajusta a largura do contorno */
+  font-size: 14px;                     /* Ajusta o tamanho da fonte */
+}
