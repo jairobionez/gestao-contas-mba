@@ -10,7 +10,7 @@ namespace GestaoContas.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<string> Get()
         {
-            return "Hello World! Tem que ter kkkkkkkkkkkkkkkk";
+            return "Hello World! Tem que ter kkkkkkkkkkkkkkkk teste";
         }
     }
 }
