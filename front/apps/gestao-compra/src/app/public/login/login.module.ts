@@ -10,6 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormaNovaContaComponent } from './form-nova-conta/form-nova-conta.component';
 import { ValidationMessagePipe } from '@front/forms';
 import { NgxMaskDirective } from 'ngx-mask';
+import { MenuModule } from '@front/components';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { NgxMaskDirective } from 'ngx-mask';
     MatButtonModule,
     MatFormFieldModule,
     ValidationMessagePipe,
-    NgxMaskDirective
+    NgxMaskDirective,
+    MenuModule
   ],
   exports: [],
   declarations: [LoginComponent, FormLoginComponent, FormaNovaContaComponent],

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-    selector: 'gestao-compra-dashboard',
+    selector: 'app-dashboard',
     standalone: false,
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss'],
@@ -10,5 +10,7 @@ import { Component, OnInit } from '@angular/core';
 export class DashboardComponent implements OnInit {
     constructor() {}
   
-    ngOnInit() {}
+    ngOnInit() {
+        debugger;
+    }
 }

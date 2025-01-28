@@ -1,12 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 
 @Component({
-    selector: 'gestao-compra-authenticated',
+    selector: 'app-authenticated',
     standalone: false,
-    template: `
-      <!-- <gestao-compra-menu [grupos]="menu"></gestao-compra-menu> -->
-      <router-outlet></router-outlet>
-    `,
+    templateUrl: './authenticated.component.html',
+    styleUrls: ['./authenticated.component.scss']
 })
 
 export class AuthenticatedComponent implements OnInit {
