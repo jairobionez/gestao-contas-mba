@@ -1,0 +1,134 @@
+@import 'apps/gestao-compra/src/assets/scss/variables';
+@import './../../../assets/scss/mixins';
+
+$gradiente-login: linear-gradient(
+  to bottom,
+  rgb(177, 18, 164) 0%,
+  rgb(115, 18, 153) 20%,
+  rgb(19, 16, 41) 59%,
+  rgb(108, 22, 217) 98%,
+  rgb(102, 22, 224) 100%
+);
+
+$cor-sombra: rgba(187, 186, 207, 0.6);
+
+.content-login {
+  display: flex;
+  height: 100vh;
+}
+
+// Lado animacoes (esquerdo)
+.lado-animacao {
+  flex: 1;
+  position: relative;
+  background-image: url('/assets/imgs/login.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+@media (max-width: $break-desktop) {
+  .lado-animacao {
+    display: none;
+  }
+}
+
+.position-relative {
+  position: relative;
+}
+
+.content-descricao {
+  position: absolute;
+  left: 50%;
+  bottom: 2rem;
+  transform: translateX(-50%);
+  width: 39rem;
+  text-align: center;
+
+  .titulo {
+    color: $cor-branco;
+    font-weight: 600;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .descricao {
+    color: $cor-branco;
+    font-size: $size-16;
+    opacity: .6;
+  }
+}
+
+// Lado form (direita)
+.lado-form {
+  flex: 0 0 46.125rem;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: $size-10;
+    background: $gradiente-login;
+  }
+}
+@media (max-width: $break-desktop) {
+  .lado-form {
+    flex: 1;
+  }
+}
+
+.img-logo {
+  width: 22rem;
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+}
+
+@media (max-width: ($break-desktop-full-hd - 1)) {
+  .img-logo {
+    width: 15rem;
+  }
+}
+
+
+// ANIMACOES
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes zoomIn {
+  0% {
+    transform: scale(1);
+  }
+
+  25% {
+    transform: scale(0.75);
+  }
+
+  50% {
+    transform: scale(1);
+  }
+
+  75% {
+    transform: scale(0.85);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+.animate__zoomIn {
+  animation: fadeIn 2s, zoomIn 2s 1s forwards;
+}
