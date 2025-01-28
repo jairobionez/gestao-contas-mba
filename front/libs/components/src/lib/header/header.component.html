@@ -1,0 +1,36 @@
+<div
+  class="height-max"
+>
+  <div class="header">
+    <div class="titulo-content">
+      <h1 class="title">
+        {{ titulo }}
+      </h1>
+
+      <div class="d-flex align-items-center justify-content-center">
+        <div class="d-flex flex-column">
+          <span
+            class="tipo-usuario"
+            >{{usuario.nome}}</span
+          >
+          <span
+            class="email-usuario"
+            >{{ usuario.email }}</span
+          >
+        </div>
+        <div class="d-flex flex-column">
+          <button class="logout-button cursor-pointer">
+            <i
+              class="fa-light fa-right-from-bracket font-18"
+            ></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content" >
+    <ng-content></ng-content>
+  </div>
+</div>
+<div [ngClass]="{ overlay: true }"></div>

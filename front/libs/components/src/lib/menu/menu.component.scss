@@ -1,0 +1,123 @@
+// @import 'apps/gestao-compra/src/assets/scss/variables';
+
+// hamburguer
+.content-hamburguer {
+  display: none;
+  position: relative;
+  z-index: 1;
+}
+
+.menu-hamburguer {
+  color: #0cc6bc;
+  font-size: 1.875rem;
+}
+
+.lista-hamburguer {
+  background-color: white;
+  position: absolute;
+  right: 0;
+  width: 20rem;
+  border-radius: .375rem;
+  box-shadow: 5px 5px 15px 0px rgba(44, 44, 44, 0.15);
+
+  &-item {
+    padding: 1rem;
+    opacity: .75;
+    font-weight: 500;
+  }
+}
+
+@media (max-width: 992px) {
+  .content-hamburguer {
+    display: block;
+  }
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  background-color: #051e40;
+  border-right: 1px solid #eff4f9;
+
+  .img{
+    width: 9.5rem;
+    height: 6.5rem;
+    border-radius: 50%;
+    padding: 5px;
+    // border: solid 1px $cor-texto;
+    margin: 0 auto;
+  }
+
+  .texto-logo{
+    color: #eff4f9;
+    margin-left: 4.4rem;
+  }
+
+  .menu-user {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .menu-logout{
+      padding: .9rem;
+      // width: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.0625rem;
+      cursor: pointer;
+      position: relative;
+    }
+  }
+
+  .user-icon {
+    text-align: center;
+    border: solid 1px #232323;
+    height: 1.55rem;
+    width: 1.55rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .8125rem;
+  }
+}
+
+.menu-item {
+  padding: .9rem;
+  // width: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.0625rem;
+  cursor: pointer;
+  position: relative;
+
+  &.ativo {
+    background-color: #eff4f9;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 3px;
+      background-color: #062043;
+    }
+  }
+}
+
+.opcao{
+  color: #051e40;
+}
+
+@media (max-width: 992px) {
+  .menu {
+    display: none;
+  }
+}

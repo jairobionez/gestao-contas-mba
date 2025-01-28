@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@front/components": ["libs/components/src/index.ts"],
       "@front/data": ["libs/data/src/index.ts"],
       "@front/forms": ["libs/forms/src/index.ts"],
       "@front/services": ["libs/services/src/index.ts"]
