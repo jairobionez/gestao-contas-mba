@@ -17,14 +17,18 @@ const routes: Routes = [
           loadChildren: () =>
             import('./dashboard/dashboard.module').then((x) => x.DashboardModule)
         },
+        {
+          path: 'categoria',
+          loadChildren: () =>
+            import('./categoria/categoria.module').then((x) => x.CategoriaModule)
+        },
       ],
     },
   ];
-  
+
 @NgModule({
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule],
 })
 
 export class AuthenticatedRouting { }
-  

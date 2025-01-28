@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-import { PublicRouting } from './public.routing';
-import { Routes } from '@angular/router';
 
 
 @Component({
