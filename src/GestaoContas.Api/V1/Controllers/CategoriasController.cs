@@ -12,13 +12,13 @@ namespace GestaoContas.Api.V1.Controllers
     public class CategoriasController : MainController
     {
         private static List<CategoriaModel> _listMock = [
-                    new CategoriaModel { Id = Guid.Parse("5317b802-cf9e-4227-abd1-4f30168b4573"), Nome = "Alimentação", Ativo = true },
-                    new CategoriaModel { Id = Guid.Parse("a4a786a4-802e-4c22-9a70-a8196bf78a0a"), Nome = "Transporte", Ativo = true  },
-                    new CategoriaModel { Id = Guid.Parse("2f069932-7281-4c35-bbcf-e0ced13d2a05"), Nome = "Estudos", Ativo = true },
-                    new CategoriaModel { Id = Guid.Parse("9a579a03-fc7d-4817-b7b4-aff87b483587"), Nome = "Lazer", Ativo = true },
-                    new CategoriaModel { Id = Guid.Parse("eb77f9b0-7b5c-4b5d-b7ec-fdf5deeda6b1"), Nome = "Viagem", Ativo = true },
-                    new CategoriaModel { Id = Guid.Parse("c9bdc038-48df-4a58-abb8-ec60b7a588cf"), Nome = "Saúde", Ativo = true },
-                    new CategoriaModel { Id = Guid.Parse("4634bff9-7800-4c77-aae5-ad56797b4d07"), Nome = "Outros", Ativo = true },
+                    new CategoriaModel { Id = Guid.Parse("5317b802-cf9e-4227-abd1-4f30168b4573"), Nome = "Alimentação", Ativo = true, Default = true },
+                    new CategoriaModel { Id = Guid.Parse("a4a786a4-802e-4c22-9a70-a8196bf78a0a"), Nome = "Transporte", Ativo = true, Default = false  },
+                    new CategoriaModel { Id = Guid.Parse("2f069932-7281-4c35-bbcf-e0ced13d2a05"), Nome = "Estudos", Ativo = true, Default = false },
+                    new CategoriaModel { Id = Guid.Parse("9a579a03-fc7d-4817-b7b4-aff87b483587"), Nome = "Lazer", Ativo = true , Default = false},
+                    new CategoriaModel { Id = Guid.Parse("eb77f9b0-7b5c-4b5d-b7ec-fdf5deeda6b1"), Nome = "Viagem", Ativo = true, Default = false },
+                    new CategoriaModel { Id = Guid.Parse("c9bdc038-48df-4a58-abb8-ec60b7a588cf"), Nome = "Saúde", Ativo = true , Default = false},
+                    new CategoriaModel { Id = Guid.Parse("4634bff9-7800-4c77-aae5-ad56797b4d07"), Nome = "Outros", Ativo = true , Default = false},
                 ];
 
         public static List<CategoriaModel> CategoriasMock => _listMock;
@@ -67,6 +67,7 @@ namespace GestaoContas.Api.V1.Controllers
                 Id = Guid.NewGuid(),
                 Nome = categoriaModel.Nome,
                 Ativo = categoriaModel.Ativo,
+                Default = categoriaModel.Default
             };
             _listMock.Add(novaCategoria);
 
@@ -88,6 +89,7 @@ namespace GestaoContas.Api.V1.Controllers
             var categoriaIndex = _listMock.FindIndex(x => x.Id == categoriaModel.Id);
             _listMock[categoriaIndex].Nome = categoriaModel.Nome;
             _listMock[categoriaIndex].Ativo = categoriaModel.Ativo;
+            _listMock[categoriaIndex].Default = categoriaModel.Default;
 
             return CustomResponse(categoriaModel);
         }
