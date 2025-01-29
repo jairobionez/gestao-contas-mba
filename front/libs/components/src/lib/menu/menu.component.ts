@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'gestao-compra-menu',
@@ -13,7 +13,8 @@ export class MenuComponent {
 
   constructor(
     private router: Router,
-  ) { 
+    private route: ActivatedRoute
+  ) {
 
   }
 
@@ -21,6 +22,8 @@ export class MenuComponent {
     if (this.router.url.indexOf('dashboard') >= 0 && menu === 'dashboard')
       return true;
     else if (this.router.url.indexOf('contas') >= 0 && menu === 'contas')
+      return true;
+    else if (this.router.url.indexOf('categoria') >= 0 && menu === 'categoria')
       return true;
 
     return false;

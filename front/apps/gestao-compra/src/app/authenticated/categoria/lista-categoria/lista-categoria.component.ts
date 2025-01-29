@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { CategoriaResponseModel } from '@front/data';
+import { CategoriaService, HeaderService } from '@front/services';
+import { take } from 'rxjs';
+
 
 @Component({
   selector: 'app-lista-categoria',
@@ -6,11 +10,33 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['lista-categoria.component.scss'],
   standalone: false
 })
-
 export class ListaCategoriaComponent implements OnInit {
 
-  constructor() { }
+  displayedColumns: string[] = ['nome', 'ativo', 'acoes'];
+  categorias: CategoriaResponseModel[] = [
+    {
+      nome: 'teste',
+      ativo: true,
+      default: true,
+      id: '123'
+    }
+  ];
 
-  ngOnInit() { }
+
+  constructor(
+    private headerService: HeaderService,
+    private categoriaService: CategoriaService
+  ) {
+    this.headerService.alterarTitulo('Categorias');
+  }
+
+  ngOnInit() {
+    this.categoriaService.get()
+      .pipe(take(1))
+      .subscribe(data => {
+        debugger;
+        this.categorias = data;
+      });
+  }
 
 }

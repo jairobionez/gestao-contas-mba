@@ -1,0 +1,53 @@
+<div class="content-filter">
+  <div class="d-flex justify-content-between">
+    <div class="row">
+      <div class="mb-2 col-md-12">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Nome</mat-label>
+          <input matInput>
+          <!-- <mat-error>{{form.email?.errors! | validationMessage}}</mat-error> -->
+        </mat-form-field>
+      </div>
+    </div>
+
+    <button mat-flat-button>Nova categoria</button>
+  </div>
+</div>
+
+<div class="table-content">
+  <table mat-table [dataSource]="categorias">
+
+    <ng-container matColumnDef="nome">
+      <th mat-header-cell *matHeaderCellDef> Nome </th>
+      <td mat-cell *matCellDef="let element" data-label="Nome"> {{element.nome}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="ativo">
+      <th mat-header-cell *matHeaderCellDef> Ativo </th>
+      <td mat-cell *matCellDef="let element" data-label="Ativo">
+        @if (element.ativo) {
+        <p>Sim</p>
+        }@else {
+        <p>Não</p>
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="acoes">
+      <th mat-header-cell *matHeaderCellDef> Ações </th>
+      <td mat-cell *matCellDef="let element" data-label="Ações">
+        <span class="material-symbols-outlined">
+          edit
+        </span>
+
+        <span class="material-symbols-outlined">
+          delete
+        </span>
+      </td>
+    </ng-container>
+
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

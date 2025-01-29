@@ -13,7 +13,8 @@
 
 .header {
   padding: 0.75rem 1.25rem;
-  background-color: #051e403d;
+  background-color: white;
+  border-bottom: 1px solid $cor-cinza-claro;;
 }
 
 .titulo-content {
@@ -24,12 +25,12 @@
   .title {
     font-weight: 500;
     font-size: $size-20;
-    color:  $cor-preta;
+    color: $cor-texto-claro;
   }
 }
 
 .logout-button {
-  margin-left: .714rem;
+  margin-left: 0.714rem;
   border: none;
   background: none;
 
@@ -43,7 +44,7 @@
 }
 
 .tipo-usuario {
-  color:  $cor-preta;
+  color: $cor-preta;
   font-weight: 500;
   font-size: $size-13;
   text-align: right;
@@ -52,7 +53,7 @@
 .email-usuario {
   font-weight: 400;
   font-size: $size-12;
-  color:  $cor-preta;
+  color: $cor-preta;
 }
 
 .headerOculto {

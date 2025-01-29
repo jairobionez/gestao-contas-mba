@@ -1,5 +1,6 @@
 export interface CategoriaResponseModel {
   id: any;
   nome: string;
-  padrao: boolean;
+  ativo: boolean;
+  default: boolean;
 }

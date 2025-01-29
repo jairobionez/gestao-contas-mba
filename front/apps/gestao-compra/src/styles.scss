@@ -17,9 +17,9 @@ html {
 :root {
   @include mat.button-overrides(
     (
-      filled-container-color: #36f2ce,
-      filled-label-text-color: #15102e,
-      protected-label-text-color: #15102e,
+      filled-container-color: #2496C8,
+      filled-label-text-color: white,
+      protected-label-text-color: white,
     )
   );
 
@@ -38,9 +38,14 @@ html {
   --cor-principal-s: 48%;
   --cor-principal-l: 12%;
 
-  --cor-principal: #15102e;
+  --cor-principal: #2496C8;
   --cor-secundaria: #36f2ce;
   --cor-terciaria: #1a5ff8;
+}
+
+.material-symbols-outlined {
+  color: $cor-texto-claro;
+  font-size: 1rem;
 }
 
 // body {
