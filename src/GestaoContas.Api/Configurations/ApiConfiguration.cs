@@ -6,6 +6,8 @@ namespace GestaoContas.Api.Configurations
     {
         public static WebApplicationBuilder AddApiConfiguration(this WebApplicationBuilder builder)
         {
+            builder.Services.AddAutoMapper(typeof(Program));
+
             builder.Services.AddControllers()
                 .ConfigureApiBehaviorOptions(options =>
                         options.SuppressModelStateInvalidFilter = true
