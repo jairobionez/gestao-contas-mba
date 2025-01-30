@@ -1,16 +1,34 @@
-
 <div class="menu">
   <div class="menu-icons">
-    <div class="mt-4 mb-5">
-      <img class="img" src="assets/imgs/gestao-compra.png" alt="">
-      <span class="texto-logo">Gestão contas</span>
+    <!-- <div class="mo">
+      <div class="conteudo">
+
+        <p>Gestão contas</p>
+      </div>
+    </div>
+    ' -->
+    <div class="logo">
+      <img class="img" src="assets/imgs/logo_reduzida.png" alt="">
+      <p>Gestão compras</p>
     </div>
 
 
-    <div class="menu-item" [routerLink]="['dashboard']"  [ngClass]="{'ativo': ativo('dashboard')}">
-      <div>
-        <i class="fad fa-users pe-4"></i>
-        <span class="opcao pe-4">Dashboard</span>
+    <div class="menu-item" [routerLink]="['dashboard']">
+      <div class="d-flex" [ngClass]="{'ativo': ativo('dashboard')}">
+        <span class="material-symbols-outlined">
+          home
+        </span>
+
+        <p class="opcao font-16 ms-1">Inicio</p>
+      </div>
+    </div>
+
+    <div class="menu-item" [routerLink]="['categoria']">
+      <div class="d-flex" [ngClass]="{'ativo': ativo('categoria')}">
+        <span class="material-symbols-outlined">
+          home_storage
+          </span>
+        <p class="opcao font-16 ms-1">Categoria</p>
       </div>
     </div>
     <!-- <div class="menu-item" [routerLink]="['contas']"  [ngClass]="{'ativo': ativo('contas')}">

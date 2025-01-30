@@ -1,4 +1,4 @@
-// @import 'apps/gestao-compra/src/assets/scss/variables';
+@import 'apps/gestao-compra/src/assets/scss/variables';
 
 // hamburguer
 .content-hamburguer {
@@ -17,12 +17,12 @@
   position: absolute;
   right: 0;
   width: 20rem;
-  border-radius: .375rem;
+  border-radius: 0.375rem;
   box-shadow: 5px 5px 15px 0px rgba(44, 44, 44, 0.15);
 
   &-item {
     padding: 1rem;
-    opacity: .75;
+    opacity: 0.75;
     font-weight: 500;
   }
 }
@@ -36,23 +36,24 @@
 .menu {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   height: 100vh;
-  background-color: #051e40;
-  border-right: 1px solid #eff4f9;
+  background-color: white;
+  border-right: 1px solid $cor-cinza-claro;
+  position: relative;
 
-  .img{
-    width: 9.5rem;
-    height: 6.5rem;
-    border-radius: 50%;
-    padding: 5px;
-    // border: solid 1px $cor-texto;
-    margin: 0 auto;
-  }
+  .logo {
+    position: absolute;
+    top: 32px;
+    left: 50%;
+    transform: translate(-50%);
+    width: 45%;
 
-  .texto-logo{
-    color: #eff4f9;
-    margin-left: 4.4rem;
+    p {
+      color: $cor-texto-claro;
+      text-align: center;
+      font-weight: 600;
+    }
   }
 
   .menu-user {
@@ -61,8 +62,8 @@
     justify-content: center;
     align-items: center;
 
-    .menu-logout{
-      padding: .9rem;
+    .menu-logout {
+      padding: 0.9rem;
       // width: 2.5rem;
       display: flex;
       align-items: center;
@@ -82,38 +83,38 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: .8125rem;
+    font-size: 0.8125rem;
   }
 }
 
 .menu-item {
-  padding: .9rem;
+  padding: 0.9rem;
   // width: 2.5rem;
   display: flex;
   align-items: center;
-  justify-content: center;
+  margin-left: .75rem;
   font-size: 1.0625rem;
   cursor: pointer;
   position: relative;
+  color: white;
 
-  &.ativo {
-    background-color: #eff4f9;
+  .ativo {
     position: relative;
 
-    &::before {
-      content: '';
+    &::after {
+      content: "";
       position: absolute;
-      top: 0;
-      bottom: 0;
       left: 0;
-      width: 3px;
-      background-color: #062043;
+      bottom: -0.3125rem;
+      height: 0.15rem;
+      width: 7rem;
+      background-color: $cor-principal;
     }
   }
 }
 
-.opcao{
-  color: #051e40;
+.opcao {
+  color: $cor-texto-claro;
 }
 
 @media (max-width: 992px) {

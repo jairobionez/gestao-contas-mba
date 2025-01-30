@@ -1,36 +1,4 @@
-@use '@angular/material' as mat;
-
-html {
-  color-scheme: light dark;
-  @include mat.theme(
-    (
-      color: mat.$violet-palette,
-      typography: (
-        plain-family: '"Poppins", sans-serif',
-      ),
-      density: 0,
-    )
-  );
-}
-// @include mat.core();
-
-:root {
-  @include mat.button-overrides(
-    (
-      filled-container-color: #36f2ce,
-      filled-label-text-color: #15102e,
-      protected-label-text-color: #15102e,
-    )
-  );
-
-  @include mat.form-field-overrides(
-    (
-      container-height: 2rem,
-      container-vertical-padding: .35rem,
-    )
-  );
-}
-
+@import './assets/scss/themes/custom-theme.scss';
 @import 'assets/scss/main';
 
 :root {
@@ -38,12 +6,7 @@ html {
   --cor-principal-s: 48%;
   --cor-principal-l: 12%;
 
-  --cor-principal: #15102e;
+  --cor-principal: #2496C8;
   --cor-secundaria: #36f2ce;
   --cor-terciaria: #1a5ff8;
 }
-
-// body {
-//   font-family: poppins, sans-serif;
-//   background-color: #f4f4f4;
-// }
