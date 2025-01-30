@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using GestaoContas.Shared.Domain;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace GestaoContas.Data.Contexts
+namespace GestaoContas.Shared.Data.Contexts
 {
-    //Mudar quando implementar o Identity para não gerar, ainda, as tabelas
-    //public class ApplicationDbContext : IdentityDbContext
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext()
         {
@@ -15,27 +14,30 @@ namespace GestaoContas.Data.Contexts
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+
         }
+        public DbSet<Usuario> Usuarios { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
             if (!optionsBuilder.IsConfigured)
             {
-                string path = Path.Combine(Directory.GetCurrentDirectory(), "Contexts");
-                string pathToConfigFile = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "src\\GestaoContas.Shared\\CommonConfigurations\\SharedSettings.json");
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "Data");
                 IConfigurationRoot configuration = new ConfigurationBuilder()
-                .SetBasePath(path)                
-                .AddJsonFile(pathToConfigFile)
+                .SetBasePath(path)
+                .AddJsonFile("sharedsettings.json")
                 .Build();
                 optionsBuilder.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
             }
+
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.ApplyConfigurationsFromAssembly((typeof(ApplicationDbContext).Assembly));            
+            builder.ApplyConfigurationsFromAssembly((typeof(ApplicationDbContext).Assembly));
+            //builder.SeedUsuarioAplicacaoAdmin(Users, Autores);
         }
     }
 }

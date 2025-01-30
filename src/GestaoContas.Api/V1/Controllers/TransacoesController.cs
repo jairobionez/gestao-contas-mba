@@ -1,8 +1,9 @@
 ﻿using GestaoContas.Api.Controllers;
 using GestaoContas.Api.Models;
-using GestaoContas.Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace GestaoContas.Api.V1.Controllers
 {
@@ -11,6 +12,7 @@ namespace GestaoContas.Api.V1.Controllers
     [Route("api/v{version:apiVersion}/transacoes")]
     public class TransacoesController : MainController
     {
+
         private static List<TransacaoModel> _listMock = [
             new TransacaoModel { Data = DateTime.Now, Id = Guid.NewGuid(), Descricao = "Almoço 25/01/2025", Tipo = TipoTranscao.Saida, Valor = 50, Categoria = CategoriasController.CategoriasMock.FirstOrDefault(x => x.Id == Guid.Parse("5317b802-cf9e-4227-abd1-4f30168b4573")) },
             new TransacaoModel { Data = DateTime.Now, Id = Guid.NewGuid(), Descricao = "Café 25/01/2025", Tipo = TipoTranscao.Saida, Valor = 20, Categoria = CategoriasController.CategoriasMock.FirstOrDefault(x => x.Id == Guid.Parse("5317b802-cf9e-4227-abd1-4f30168b4573")) },
@@ -19,9 +21,13 @@ namespace GestaoContas.Api.V1.Controllers
             new TransacaoModel { Data = DateTime.Now, Id = Guid.NewGuid(), Descricao = "Salário", Tipo = TipoTranscao.Entrada, Valor = 4000.50M, Categoria = CategoriasController.CategoriasMock.FirstOrDefault(x => x.Id == Guid.Parse("4634bff9-7800-4c77-aae5-ad56797b4d07")) },
                 ];
 
-        public TransacoesController(INotificador notificador, IUser appUser) : base(notificador, appUser)
+        public TransacoesController(UserManager<IdentityUser> userManager, IOptions<JwtSettings> jwtSettings) : base(userManager, jwtSettings)
         {
         }
+
+        //public TransacoesController(INotificador notificador, IUser appUser) : base(notificador, appUser)
+        //{
+        //}
 
         [AllowAnonymous]
         [HttpGet]

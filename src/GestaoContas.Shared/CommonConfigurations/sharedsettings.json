@@ -1,5 +1,6 @@
 {
-  "ConnectionStrings": {    
-    "DefaultConnection": "Data Source=..\\GestaoContas.Shared\\Data\\Database\\GestaoContas.db"
+  "ConnectionStrings": {
+    //"DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=MeuBlog;Trusted_Connection=True;MultipleActiveResultSets=true;Encrypt=True;TrustServerCertificate=True"
+    "DefaultConnection": "Data Source=..\\GestaoContas.Shared\\Data\\Database\\MeuBlog.db"
   }
 }

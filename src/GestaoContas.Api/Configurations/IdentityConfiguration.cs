@@ -1,5 +1,5 @@
 ﻿using GestaoContas.Api.Models;
-using GestaoContas.Data.Contexts;
+using GestaoContas.Shared.Data.Contexts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;

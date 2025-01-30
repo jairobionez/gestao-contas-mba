@@ -1,8 +1,9 @@
 ﻿using GestaoContas.Api.Controllers;
 using GestaoContas.Api.Models;
-using GestaoContas.Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace GestaoContas.Api.V1.Controllers
 {
@@ -11,6 +12,9 @@ namespace GestaoContas.Api.V1.Controllers
     [Route("api/v{version:apiVersion}/categorias")]
     public class CategoriasController : MainController
     {
+
+
+
         private static List<CategoriaModel> _listMock = [
                     new CategoriaModel { Id = Guid.Parse("5317b802-cf9e-4227-abd1-4f30168b4573"), Nome = "Alimentação", Ativo = true },
                     new CategoriaModel { Id = Guid.Parse("a4a786a4-802e-4c22-9a70-a8196bf78a0a"), Nome = "Transporte", Ativo = true  },
@@ -21,11 +25,19 @@ namespace GestaoContas.Api.V1.Controllers
                     new CategoriaModel { Id = Guid.Parse("4634bff9-7800-4c77-aae5-ad56797b4d07"), Nome = "Outros", Ativo = true },
                 ];
 
-        public static List<CategoriaModel> CategoriasMock => _listMock;
-
-        public CategoriasController(INotificador notificador, IUser appUser) : base(notificador, appUser)
+        public CategoriasController(UserManager<IdentityUser> userManager, IOptions<JwtSettings> jwtSettings) : base(userManager, jwtSettings)
         {
         }
+
+        //public CategoriasController(INotificador notificador, IUser appUser) : base(notificador, appUser)
+        //{
+        //}
+
+        public static List<CategoriaModel> CategoriasMock => _listMock;
+
+        //public CategoriasController(INotificador notificador, IUser appUser) : base(notificador, appUser)
+        //{
+        //}
 
         [AllowAnonymous]
         [HttpGet]
