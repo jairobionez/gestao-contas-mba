@@ -14,8 +14,8 @@ export class CategoriaFormGroup extends FormGroupBase {
     return this.get('nome') as FormControl;
   }
 
-  get padrao(): FormControl {
-    return this.get('padrao') as FormControl;
+  get default(): FormControl {
+    return this.get('default') as FormControl;
   }
 
 
@@ -23,7 +23,7 @@ export class CategoriaFormGroup extends FormGroupBase {
     super({
       id: fb.control(null),
       nome: fb.control('', Validators.required),
-      padrao: fb.control(false)
+      default: fb.control(false)
     });
   }
 }

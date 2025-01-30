@@ -3,11 +3,15 @@
   overflow: auto;
 }
 
-
-.mat-column-acoes {
-  width: 10rem;
+.cdk-column-acoes {
+  flex: 0 0 10rem;
 }
 
-.mat-column-ativo {
-  width: 10rem;
+.cdk-column-ativo {
+  flex: 0 0 10rem;
+}
+
+.filter-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }

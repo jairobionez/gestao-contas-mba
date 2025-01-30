@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { CategoriaFormGroup } from '@front/forms';
 
 @Component({
   selector: 'app-create-edit-categoria',
@@ -8,7 +10,22 @@ import { Component, OnInit } from '@angular/core';
 })
 
 export class CreateEditCategoriaComponent implements OnInit {
-  constructor() { }
+  form: CategoriaFormGroup;
+
+  dialogRef = inject(MatDialogRef<CreateEditCategoriaComponent>)
+  data = inject(MAT_DIALOG_DATA);
+
+  constructor() {
+    this.form = new CategoriaFormGroup();
+  }
 
   ngOnInit() { }
+
+  salvar(): void {
+    this.dialogRef.close(true);
+  }
+
+  voltar(): void {
+    this.dialogRef.close(false);
+  }
 }
