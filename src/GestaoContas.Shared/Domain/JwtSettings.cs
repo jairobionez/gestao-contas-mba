@@ -1,4 +1,4 @@
-﻿namespace GestaoContas.Api.Models
+﻿namespace GestaoContas.Shared.Domain
 {
     public class JwtSettings
     {

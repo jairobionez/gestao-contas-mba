@@ -3,6 +3,7 @@ using GestaoContas.Api.Models;
 using GestaoContas.Api.V1.ViewModels.Autenticacoes;
 using GestaoContas.Shared.Data.Contexts;
 using GestaoContas.Shared.Domain;
+using GestaoContas.Shared.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -19,11 +20,13 @@ namespace GestaoContas.Api.V1.Controllers
     [Route("api/v{version:apiVersion}/autenticacao")]
     public class AutenticacaoController : MainController
     {
-        private readonly SignInManager<IdentityUser> _signInManager;                
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly JwtSettings _jwtSettings;
         private readonly ApplicationDbContext _context;
         public AutenticacaoController(
             SignInManager<IdentityUser> signInManager,
-            UserManager<IdentityUser> userManager,
+            UserManager<ApplicationUser> userManager,
             IOptions<JwtSettings> jwtSettings,
             ApplicationDbContext context)
             :base(userManager, jwtSettings)

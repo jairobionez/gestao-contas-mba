@@ -12,10 +12,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http;
 using GestaoContas.Shared.Domain;
+using GestaoContas.Shared.Extensions;
 
 namespace GestaoContas.Api.V1.Controllers
 {
     //[Authorize]
+    [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/categorias")]
     public class CategoriasController : MainController
@@ -24,18 +26,18 @@ namespace GestaoContas.Api.V1.Controllers
         private ApplicationDbContext _context;
         private IMapper _mapper;
 
-        private static List<CategoriaModel> _listMock = [
-                    new CategoriaModel { Id = Guid.Parse("5317b802-cf9e-4227-abd1-4f30168b4573"), Nome = "Alimentação", Ativo = true },
-                    new CategoriaModel { Id = Guid.Parse("a4a786a4-802e-4c22-9a70-a8196bf78a0a"), Nome = "Transporte", Ativo = true  },
-                    new CategoriaModel { Id = Guid.Parse("2f069932-7281-4c35-bbcf-e0ced13d2a05"), Nome = "Estudos", Ativo = true },
-                    new CategoriaModel { Id = Guid.Parse("9a579a03-fc7d-4817-b7b4-aff87b483587"), Nome = "Lazer", Ativo = true },
-                    new CategoriaModel { Id = Guid.Parse("eb77f9b0-7b5c-4b5d-b7ec-fdf5deeda6b1"), Nome = "Viagem", Ativo = true },
-                    new CategoriaModel { Id = Guid.Parse("c9bdc038-48df-4a58-abb8-ec60b7a588cf"), Nome = "Saúde", Ativo = true },
-                    new CategoriaModel { Id = Guid.Parse("4634bff9-7800-4c77-aae5-ad56797b4d07"), Nome = "Outros", Ativo = true },
-                ];
+        //private static List<CategoriaModel> _listMock = [
+        //            new CategoriaModel { Id = Guid.Parse("5317b802-cf9e-4227-abd1-4f30168b4573"), Nome = "Alimentação", Ativo = true },
+        //            new CategoriaModel { Id = Guid.Parse("a4a786a4-802e-4c22-9a70-a8196bf78a0a"), Nome = "Transporte", Ativo = true  },
+        //            new CategoriaModel { Id = Guid.Parse("2f069932-7281-4c35-bbcf-e0ced13d2a05"), Nome = "Estudos", Ativo = true },
+        //            new CategoriaModel { Id = Guid.Parse("9a579a03-fc7d-4817-b7b4-aff87b483587"), Nome = "Lazer", Ativo = true },
+        //            new CategoriaModel { Id = Guid.Parse("eb77f9b0-7b5c-4b5d-b7ec-fdf5deeda6b1"), Nome = "Viagem", Ativo = true },
+        //            new CategoriaModel { Id = Guid.Parse("c9bdc038-48df-4a58-abb8-ec60b7a588cf"), Nome = "Saúde", Ativo = true },
+        //            new CategoriaModel { Id = Guid.Parse("4634bff9-7800-4c77-aae5-ad56797b4d07"), Nome = "Outros", Ativo = true },
+        //        ];
 
         public CategoriasController(
-            UserManager<IdentityUser> userManager, 
+            UserManager<ApplicationUser> userManager, 
             IOptions<JwtSettings> jwtSettings, 
             ApplicationDbContext context,
             IMapper mapper) : base(userManager, jwtSettings)
@@ -47,9 +49,7 @@ namespace GestaoContas.Api.V1.Controllers
         //public CategoriasController(INotificador notificador, IUser appUser) : base(notificador, appUser)
         //{
         //}
-
-        public static List<CategoriaModel> CategoriasMock => _listMock;
-
+        //public static List<CategoriaModel> CategoriasMock => _listMock;
         //public CategoriasController(INotificador notificador, IUser appUser) : base(notificador, appUser)
         //{
         //}
@@ -65,9 +65,15 @@ namespace GestaoContas.Api.V1.Controllers
 
         [AllowAnonymous]
         [HttpGet("{busca}")]
-        public async Task<IEnumerable<CategoriaModel>> Get(string busca)
+        public async Task<IEnumerable<CategoriaViewModel>> Get(string busca)
         {
-            return _listMock.Where(x => x.Nome.ToLower().Contains(busca.ToLower()) && x.Ativo);
+            //return _listMock.Where(x => x.Nome.ToLower().Contains(busca.ToLower()) && x.Ativo);
+            //Motta adicionou
+            return _mapper.Map<IEnumerable<CategoriaViewModel>>(
+                await _context.Categorias
+                    .Where(c => c.Nome.ToLower().Contains(busca.ToLower()) && c.Ativo)
+                    .ToListAsync()
+            );
             //return _mapper.Map<IEnumerable<FornecedorViewModel>>(await _fornecedorRepository.ObterTodos());
         }
 

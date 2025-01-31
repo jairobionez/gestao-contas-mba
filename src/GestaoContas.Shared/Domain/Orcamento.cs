@@ -1,6 +1,6 @@
 ﻿namespace GestaoContas.Shared.Domain
 {
-    public  class Orcamento
+    public  class Orcamento : Entity
     {
         public Guid Id { get; private set; }
         public int Mes { get; private set; }
