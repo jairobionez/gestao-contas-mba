@@ -1,38 +1,39 @@
-﻿using GestaoContas.Business.Interfaces;
-using GestaoContas.Business.Notifications;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace GestaoContas.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     public abstract class MainController : ControllerBase
     {
-        private readonly INotificador _notificador;
-        public readonly IUser AppUser;
+        //private readonly INotificador _notificador;
+        //public readonly IUser AppUser;
 
         protected Guid UsuarioId { get; set; }
-        protected bool UsuarioAutenticado { get; set; }
+        protected bool UsuarioAutenticado { get; set; }       
+        
 
-        protected MainController(INotificador notificador,
-                                 IUser appUser)
-        {
-            _notificador = notificador;
-            AppUser = appUser;
+        //protected MainController(INotificador notificador,
+        //                         IUser appUser)
+        //{
+        //    _notificador = notificador;
+        //    AppUser = appUser;
 
-            if (appUser.IsAuthenticated())
-            {
-                UsuarioId = appUser.GetUserId();
-                UsuarioAutenticado = true;
-            }
-        }
+        //    if (appUser.IsAuthenticated())
+        //    {
+        //        UsuarioId = appUser.GetUserId();
+        //        UsuarioAutenticado = true;
+        //    }
+        //}
 
         protected bool OperacaoValida()
         {
-            return !_notificador.TemNotificacao();
+            return true; //!_notificador.TemNotificacao();
         }
 
-        protected ActionResult CustomResponse(object result = null)
+        protected ActionResult CustomResponse(object? result = null)
         {
             if (OperacaoValida())
             {
@@ -46,7 +47,7 @@ namespace GestaoContas.Api.Controllers
             return BadRequest(new
             {
                 success = false,
-                errors = _notificador.ObterNotificacoes().Select(n => n.Mensagem)
+                errors = new object() // _notificador.ObterNotificacoes().Select(n => n.Mensagem)
             });
         }
 
@@ -68,7 +69,7 @@ namespace GestaoContas.Api.Controllers
 
         protected void NotificarErro(string mensagem)
         {
-            _notificador.Handle(new Notificacao(mensagem));
+            //_notificador.Handle(new Notificacao(mensagem));
         }
     }
 }

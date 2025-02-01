@@ -1,4 +1,4 @@
-﻿using GestaoContas.Data.Contexts;
+﻿using GestaoContas.Shared.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 
 namespace GestaoContas.Api.Configurations
