@@ -1,10 +1,7 @@
 ﻿using GestaoContas.Shared.Data.Contexts;
 using GestaoContas.Shared.Domain;
-using GestaoContas.Shared.Extensions;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 
 namespace GestaoContas.Api.Helpers
 {
@@ -27,8 +24,8 @@ namespace GestaoContas.Api.Helpers
             using var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
             var env = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
 
-            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser<Guid>>>();
 
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
@@ -41,7 +38,7 @@ namespace GestaoContas.Api.Helpers
             }
 
         }
-        private static async Task EnsureSeedProducts(ApplicationDbContext context, RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager)
+        private static async Task EnsureSeedProducts(ApplicationDbContext context, RoleManager<IdentityRole<Guid>> roleManager, UserManager<IdentityUser<Guid>> userManager)
         {
             if (context.Users.Any())
                 return;
@@ -49,14 +46,14 @@ namespace GestaoContas.Api.Helpers
             // Seed Roles
             if (!await roleManager.RoleExistsAsync("Admin"))
             {
-                await roleManager.CreateAsync(new ApplicationRole("Admin"));
+                await roleManager.CreateAsync(new IdentityRole<Guid>("Admin"));
             }
 
             // Seed Users
             var adminId = Guid.NewGuid();
             if (!context.Users.Any(u => u.UserName == "admin@teste.com"))
             {
-                var adminUser = new ApplicationUser
+                var adminUser = new IdentityUser<Guid>
                 {
                     Id = adminId,
                     UserName = "admin@teste.com",
@@ -81,7 +78,7 @@ namespace GestaoContas.Api.Helpers
             var userId = Guid.NewGuid();
             if (!context.Users.Any(u => u.UserName == "teste@teste.com"))
             {
-                var normalUser = new ApplicationUser
+                var normalUser = new IdentityUser<Guid>
                 {
                     Id = userId,
                     UserName = "teste@teste.com",

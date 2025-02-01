@@ -3,29 +3,27 @@ using GestaoContas.Api.V1.ViewModels.Usuarios;
 using GestaoContas.Shared.Data.Contexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http;
 using AutoMapper;
 using GestaoContas.Shared.Domain;
 using Microsoft.AspNetCore.Identity;
-using GestaoContas.Api.Models;
 using Microsoft.Extensions.Options;
-using GestaoContas.Shared.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GestaoContas.Api.V1.Controllers
-{
+{    
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/usuarios")]
-    public class UsuariosController : MainController
+    public class UsuariosController : MainSignInController
     {
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly SignInManager<IdentityUser<Guid>> _signInManager;
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
 
         //TODO: Fazer uma controller base específica para quem utiliza UserManager e JwtSettings
         public UsuariosController(
-            SignInManager<ApplicationUser> signInManager, 
-            UserManager<ApplicationUser> userManager, 
+            SignInManager<IdentityUser<Guid>> signInManager, 
+            UserManager<IdentityUser<Guid>> userManager, 
             IOptions<JwtSettings> jwtSettings, 
             ApplicationDbContext context, 
             IMapper mapper)
@@ -63,7 +61,7 @@ namespace GestaoContas.Api.V1.Controllers
         {
             if (!ModelState.IsValid) return ValidationProblem(ModelState);
 
-            var user = new ApplicationUser()
+            var user = new IdentityUser<Guid>()
             {
                 UserName = model.Email,
                 Email = model.Email,

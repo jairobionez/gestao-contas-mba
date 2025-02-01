@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using GestaoContas.Api.Controllers;
 using GestaoContas.Api.V1.ViewModels.Orcamento;
 using GestaoContas.Shared.Data.Contexts;
 using GestaoContas.Shared.Domain;
@@ -7,11 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace GestaoContas.Api.V1.Controllers
-{
+{    
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/orcamentos")]
-    public class OrcamentosController : ControllerBase
+    public class OrcamentosController : MainController
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;

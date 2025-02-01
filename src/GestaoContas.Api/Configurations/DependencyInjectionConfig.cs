@@ -5,16 +5,16 @@ namespace GestaoContas.Api.Configurations
 {
     public static class DependencyInjectionConfig
     {
-        public static IServiceCollection ResolveDependencies(this IServiceCollection services)
+        public static WebApplicationBuilder ResolveDependencies(this WebApplicationBuilder builder)
         {
             //services.AddScoped<INotificador, Notificador>();
 
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            //services.AddScoped<IUser, AspNetUser>();
+            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            //builder.Services.AddScoped<IUser, AspNetUser>();
 
-            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+            builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
-            return services;
+            return builder;
         }
     }
 }

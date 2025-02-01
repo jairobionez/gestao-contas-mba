@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace GestaoContas.Shared.Extensions
 {
-    public class ApplicationUser : IdentityUser<Guid>
-    {
+    //public class ApplicationUser : IdentityUser<Guid>
+    //{
 
-    }
+    //}
 }
