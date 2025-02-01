@@ -119,7 +119,7 @@ namespace GestaoContas.Api.V1.Controllers
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
             var categoriaExistente = await _context.Categorias.FindAsync(id);
-            if (categoriaExistente == null) return NotFound();
+            if (categoriaExistente == null) return NotFound();            
 
             categoriaExistente.Atualizar(_mapper.Map<Categoria>(categoriaModel));
 
