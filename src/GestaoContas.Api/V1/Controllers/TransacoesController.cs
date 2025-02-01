@@ -1,19 +1,17 @@
 ﻿using AutoMapper;
 using GestaoContas.Api.Controllers;
-using GestaoContas.Api.V1.ViewModels.Categorias;
 using GestaoContas.Api.V1.ViewModels.Transacao;
 using GestaoContas.Shared.Data.Contexts;
 using GestaoContas.Shared.Domain;
-using GestaoContas.Shared.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Http;
 
 namespace GestaoContas.Api.V1.Controllers
-{
-    //[Authorize]
+{    
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/transacoes")]
@@ -31,10 +29,8 @@ namespace GestaoContas.Api.V1.Controllers
         //        ];
 
         public TransacoesController(
-            UserManager<ApplicationUser> userManager,
-            IOptions<JwtSettings> jwtSettings,
             ApplicationDbContext context,
-            IMapper mapper) : base(userManager, jwtSettings)
+            IMapper mapper) : base()
         {
             _context = context;
             _mapper = mapper;
@@ -44,7 +40,7 @@ namespace GestaoContas.Api.V1.Controllers
         //{
         //}
 
-        [AllowAnonymous]
+        
         [HttpGet]
         public async Task<IEnumerable<TransacaoViewModel>> ObterTodos()
         {
@@ -70,7 +66,7 @@ namespace GestaoContas.Api.V1.Controllers
             return _mapper.Map<IEnumerable<TransacaoViewModel>>(transacoes);
         }
 
-        [AllowAnonymous]
+        
         [HttpPost("busca")]
         public async Task<IEnumerable<TransacaoViewModel>> Busca(FiltroTransacaoViewModel busca)
         {
@@ -97,8 +93,11 @@ namespace GestaoContas.Api.V1.Controllers
             return _mapper.Map<IEnumerable<TransacaoViewModel>>(transacoes);
         }
 
-        [AllowAnonymous]
+        
         [HttpGet("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult<TransacaoViewModel>> ObterPorId(Guid id)
         {
             var transacao = await _context.Transacoes.FindAsync(id);
@@ -111,6 +110,9 @@ namespace GestaoContas.Api.V1.Controllers
 
         //[ClaimsAuthorize("Categoria", "Adicionar")]
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary), StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult<TransacaoViewModel>> Adicionar(TransacaoViewModel transacaoViewModel)
         {
             if (!ModelState.IsValid)
@@ -127,6 +129,10 @@ namespace GestaoContas.Api.V1.Controllers
         }
 
         [HttpPut("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult<TransacaoViewModel>> Atualizar(Guid id, TransacaoViewModel transacaoViewModel)
         {
             if (!ModelState.IsValid)
@@ -147,6 +153,9 @@ namespace GestaoContas.Api.V1.Controllers
 
         //[ClaimsAuthorize("Categoria", "Excluir")]
         [HttpDelete("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult<TransacaoViewModel>> Excluir(Guid id)
         {
             var transacao = await _context.Transacoes.FindAsync(id);
@@ -160,7 +169,7 @@ namespace GestaoContas.Api.V1.Controllers
             return Ok(_mapper.Map<TransacaoViewModel>(transacao));
         }
 
-        [AllowAnonymous]
+        
         [HttpGet("resumo/{dataInicial:datetime}/{dataFinal:datetime}")]
         public async Task<ActionResult<ResumoTransacaoViewModel>> Resumo(DateTime dataInicial, DateTime dataFinal)
         {

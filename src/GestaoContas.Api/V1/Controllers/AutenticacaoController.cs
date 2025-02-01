@@ -1,32 +1,24 @@
 ﻿using GestaoContas.Api.Controllers;
-using GestaoContas.Api.Models;
 using GestaoContas.Api.V1.ViewModels.Autenticacoes;
 using GestaoContas.Shared.Data.Contexts;
 using GestaoContas.Shared.Domain;
-using GestaoContas.Shared.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace GestaoContas.Api.V1.Controllers
-{
-
+{    
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/autenticacao")]
-    public class AutenticacaoController : MainController
+    public class AutenticacaoController : MainSignInController
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly JwtSettings _jwtSettings;
+        private readonly SignInManager<IdentityUser<Guid>> _signInManager;        
         private readonly ApplicationDbContext _context;
         public AutenticacaoController(
-            SignInManager<IdentityUser> signInManager,
-            UserManager<ApplicationUser> userManager,
+            SignInManager<IdentityUser<Guid>> signInManager,
+            UserManager<IdentityUser<Guid>> userManager,
             IOptions<JwtSettings> jwtSettings,
             ApplicationDbContext context)
             :base(userManager, jwtSettings)
@@ -34,8 +26,8 @@ namespace GestaoContas.Api.V1.Controllers
             _signInManager = signInManager;            
             _context = context;
         }
-                        
 
+        [AllowAnonymous]
         [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]

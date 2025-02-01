@@ -1,9 +1,14 @@
 using GestaoContas.Api.Configurations;
 using GestaoContas.Api.Helpers;
 using GestaoContas.Shared.CommonConfigurations;
+using Microsoft.AspNetCore.Authentication;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+
 
 builder
     .AddSharedsConfiguration()
@@ -11,10 +16,10 @@ builder
     .AddSwaggerConfiguration()
     .AddDbContextConfiguration()
     .AddContextConfiguration()
-    .AddIdentityConfiguration();
+    .AddIdentityConfiguration()
+    .ResolveDependencies();
 
-//TODO alterar para configuration
-builder.Services.ResolveDependencies();
+
 
 var app = builder.Build();
 var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
@@ -33,6 +38,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
 app.UseDbMigrationHelper();
 
 app.Run();

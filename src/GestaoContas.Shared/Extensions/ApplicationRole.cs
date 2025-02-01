@@ -8,13 +8,13 @@ using System.Xml.Linq;
 
 namespace GestaoContas.Shared.Extensions
 {
-    public class ApplicationRole : IdentityRole<Guid>
-    {
-        public ApplicationRole() : base() { }
+    //public class ApplicationRole : IdentityRole<Guid>
+    //{
+    //    public ApplicationRole() : base() { }
 
-        public ApplicationRole(string roleName) : base()
-        {
-            Name = roleName;
-        }
-    }
+    //    public ApplicationRole(string roleName) : base()
+    //    {
+    //        Name = roleName;
+    //    }
+    //}
 }

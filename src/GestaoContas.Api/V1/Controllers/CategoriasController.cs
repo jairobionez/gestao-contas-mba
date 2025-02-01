@@ -2,21 +2,16 @@
 using GestaoContas.Api.Controllers;
 using GestaoContas.Api.Models;
 using GestaoContas.Api.V1.ViewModels.Categorias;
-
-//using GestaoContas.Api.Models;
 using GestaoContas.Shared.Data.Contexts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Http;
 using GestaoContas.Shared.Domain;
-using GestaoContas.Shared.Extensions;
 
 namespace GestaoContas.Api.V1.Controllers
-{
-    //[Authorize]
+{    
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/categorias")]
@@ -37,10 +32,8 @@ namespace GestaoContas.Api.V1.Controllers
         //        ];
 
         public CategoriasController(
-            UserManager<ApplicationUser> userManager, 
-            IOptions<JwtSettings> jwtSettings, 
             ApplicationDbContext context,
-            IMapper mapper) : base(userManager, jwtSettings)
+            IMapper mapper) : base()
         {
             _context = context;
             _mapper = mapper;
