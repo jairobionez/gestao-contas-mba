@@ -1,0 +1,24 @@
+<div class="d-flex">
+    <div class="d-flex align-items-center me-4">
+      <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Data inicio</mat-label>
+        <input matInput type="date">
+      </mat-form-field>
+    </div>
+    <div class="d-flex align-items-center">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Data Fim</mat-label>
+          <input matInput type="date">
+        </mat-form-field>
+    </div>
+    <!-- <div class="d-flex justify-content-end">
+      <button class="width-10" mat-flat-button>Exportar Gráficos</button>
+    </div> -->
+</div>
+
+<div class="mt-5 row">
+    <div class="col-12">
+        <span class="d-flex justify-content-center font-20 font-600 cor-texto mb-2">Gastos por categoria</span>
+        <div echarts [options]="options" theme="macarons" class="demo-chart" style="height: calc(100svh - 30rem); width: 100%;"></div>
+    </div>
+</div>

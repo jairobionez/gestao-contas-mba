@@ -19,7 +19,7 @@ export class MenuComponent {
   }
 
   ativo(menu: string): boolean {
-    if (this.router.url.indexOf('dashboard') >= 0 && menu === 'dashboard')
+    if (this.router.url.indexOf('inicio') >= 0 && menu === 'inicio')
       return true;
     else if (this.router.url.indexOf('contas') >= 0 && menu === 'contas')
       return true;
