@@ -20,6 +20,7 @@ namespace GestaoContas.Shared.Data.Contexts
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<Transacao> Transacoes { get; set; }
+        public DbSet<Orcamento> Orcamentos { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

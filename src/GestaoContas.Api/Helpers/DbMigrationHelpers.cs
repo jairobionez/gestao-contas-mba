@@ -189,6 +189,41 @@ namespace GestaoContas.Api.Helpers
                 });
 
                 await context.SaveChangesAsync();
+
+                if (!context.Orcamentos.Any())
+                    {
+                        await context.Orcamentos.AddRangeAsync(new List<Orcamento>
+                    {
+                        new Orcamento
+                        {
+                            Id = Guid.NewGuid(),
+                            Mes = 1,
+                            Ano = 2025,
+                            Limite = 1000M,
+                            CategoriaId = categoriaOneId,
+                            UsuarioId = adminId
+                        },
+                        new Orcamento
+                        {
+                            Id = Guid.NewGuid(),
+                            Mes = 2,
+                            Ano = 2025,
+                            Limite = 150M,
+                            CategoriaId = categoriaTwoId,
+                            UsuarioId = adminId
+                        },
+                        new Orcamento
+                        {
+                            Id = Guid.NewGuid(),
+                            Mes = 3,
+                            Ano = 2025,
+                            Limite = 500M,
+                            CategoriaId = categoriaOneId,
+                            UsuarioId = userId
+                        }
+                    });
+                    await context.SaveChangesAsync();
+                }
             }
         }
     }

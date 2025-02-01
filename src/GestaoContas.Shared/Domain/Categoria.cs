@@ -9,6 +9,7 @@ namespace GestaoContas.Shared.Domain
         public bool Padrao { get; set;}
         public bool Ativo { get; set;}
         public IEnumerable<Transacao> Transacoes { get; set; }
+        public IEnumerable<Orcamento> Orcamentos { get; set; }
 
         public void Atualizar(Categoria categoria)
         {
