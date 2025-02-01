@@ -13,22 +13,26 @@ export class CategoriaService {
 
 
   get(): Observable<CategoriaResponseModel[]> {
-    return this.httpCliente.get<CategoriaResponseModel[]>(`${environment.apiBase}/categoria`);
+    return this.httpCliente.get<CategoriaResponseModel[]>(`${environment.apiBase}/categorias`);
+  }
+
+  getAtivos(): Observable<CategoriaResponseModel[]> {
+    return this.httpCliente.get<CategoriaResponseModel[]>(`${environment.apiBase}/categorias/ativos`);
   }
 
   getById(categoriaId: any): Observable<CategoriaResponseModel> {
-    return this.httpCliente.get<CategoriaResponseModel>(`${environment.apiBase}/categoria/${categoriaId}`);
+    return this.httpCliente.get<CategoriaResponseModel>(`${environment.apiBase}/categorias/${categoriaId}`);
   }
 
   post(categoria: CategoriaModel): Observable<CategoriaResponseModel> {
-    return this.httpCliente.post<CategoriaResponseModel>(`${environment.apiBase}/categoria`, categoria);
+    return this.httpCliente.post<CategoriaResponseModel>(`${environment.apiBase}/categorias`, categoria);
   }
 
   put(categoriaId: any, categoria: CategoriaModel): Observable<CategoriaResponseModel> {
-    return this.httpCliente.put<CategoriaResponseModel>(`${environment.apiBase}/categoria/${categoriaId}`, categoria);
+    return this.httpCliente.put<CategoriaResponseModel>(`${environment.apiBase}/categorias/${categoriaId}`, categoria);
   }
 
   delete(categoriaId: any): Observable<CategoriaResponseModel> {
-    return this.httpCliente.delete<CategoriaResponseModel>(`${environment.apiBase}/categoria/${categoriaId}`);
+    return this.httpCliente.delete<CategoriaResponseModel>(`${environment.apiBase}/categorias/${categoriaId}`);
   }
 }
