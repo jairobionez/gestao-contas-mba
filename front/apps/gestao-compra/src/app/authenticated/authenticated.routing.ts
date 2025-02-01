@@ -10,12 +10,12 @@ const routes: Routes = [
         {
           path: '',
           pathMatch: 'full',
-          redirectTo: 'dashboard',
+          redirectTo: 'inicio',
         },
         {
-          path: 'dashboard',
+          path: 'inicio',
           loadChildren: () =>
-            import('./dashboard/dashboard.module').then((x) => x.DashboardModule)
+            import('./inicio/inicio.module').then((x) => x.InicioModule)
         },
         {
           path: 'categoria',
