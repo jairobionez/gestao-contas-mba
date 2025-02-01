@@ -1,5 +1,6 @@
-﻿using GestaoContas.Api.Models;
-using GestaoContas.Data.Contexts;
+﻿using GestaoContas.Shared.Data.Contexts;
+using GestaoContas.Shared.Domain;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -11,9 +12,9 @@ namespace GestaoContas.Api.Configurations
     {
         public static WebApplicationBuilder AddIdentityConfiguration(this WebApplicationBuilder builder)
         {
-            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-                            .AddRoles<IdentityRole>()
-                            .AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.Services.AddIdentity<IdentityUser<Guid>, IdentityRole<Guid>>()
+                           .AddRoles<IdentityRole<Guid>>()
+                           .AddEntityFrameworkStores<ApplicationDbContext>();
 
             var jwtSettingsSection = builder.Configuration.GetSection("JwtSettings");
             builder.Services.Configure<JwtSettings>(jwtSettingsSection);

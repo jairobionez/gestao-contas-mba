@@ -1,23 +1,20 @@
-﻿using GestaoContas.Api.Extensions;
-using GestaoContas.Business.Interfaces;
-using GestaoContas.Business.Notifications;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace GestaoContas.Api.Configurations
 {
     public static class DependencyInjectionConfig
     {
-        public static IServiceCollection ResolveDependencies(this IServiceCollection services)
+        public static WebApplicationBuilder ResolveDependencies(this WebApplicationBuilder builder)
         {
-            services.AddScoped<INotificador, Notificador>();
+            //services.AddScoped<INotificador, Notificador>();
 
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddScoped<IUser, AspNetUser>();
+            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            //builder.Services.AddScoped<IUser, AspNetUser>();
 
-            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+            builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
-            return services;
+            return builder;
         }
     }
 }

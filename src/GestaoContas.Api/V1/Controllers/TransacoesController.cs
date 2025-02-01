@@ -1,132 +1,198 @@
-﻿using GestaoContas.Api.Controllers;
-using GestaoContas.Api.Models;
-using GestaoContas.Business.Interfaces;
+﻿using AutoMapper;
+using GestaoContas.Api.Controllers;
+using GestaoContas.Api.V1.ViewModels.Transacao;
+using GestaoContas.Shared.Data.Contexts;
+using GestaoContas.Shared.Domain;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Http;
 
 namespace GestaoContas.Api.V1.Controllers
-{
-    //[Authorize]
+{    
+    [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/transacoes")]
     public class TransacoesController : MainController
     {
-        private static List<TransacaoModel> _listMock = [
-            new TransacaoModel { Data = DateTime.Now, Id = Guid.NewGuid(), Descricao = "Almoço 25/01/2025", Tipo = TipoTranscao.Saida, Valor = 50, Categoria = CategoriasController.CategoriasMock.FirstOrDefault(x => x.Id == Guid.Parse("5317b802-cf9e-4227-abd1-4f30168b4573")) },
-            new TransacaoModel { Data = DateTime.Now, Id = Guid.NewGuid(), Descricao = "Café 25/01/2025", Tipo = TipoTranscao.Saida, Valor = 20, Categoria = CategoriasController.CategoriasMock.FirstOrDefault(x => x.Id == Guid.Parse("5317b802-cf9e-4227-abd1-4f30168b4573")) },
-            new TransacaoModel { Data = DateTime.Now, Id = Guid.NewGuid(), Descricao = "Parcela MBA", Tipo = TipoTranscao.Saida, Valor = 400, Categoria = CategoriasController.CategoriasMock.FirstOrDefault(x => x.Id == Guid.Parse("2f069932-7281-4c35-bbcf-e0ced13d2a05")) },
-            new TransacaoModel { Data = DateTime.Now, Id = Guid.NewGuid(), Descricao = "Plano Saúde", Tipo = TipoTranscao.Saida, Valor = 300.50M, Categoria = CategoriasController.CategoriasMock.FirstOrDefault(x => x.Id == Guid.Parse("c9bdc038-48df-4a58-abb8-ec60b7a588cf")) },
-            new TransacaoModel { Data = DateTime.Now, Id = Guid.NewGuid(), Descricao = "Salário", Tipo = TipoTranscao.Entrada, Valor = 4000.50M, Categoria = CategoriasController.CategoriasMock.FirstOrDefault(x => x.Id == Guid.Parse("4634bff9-7800-4c77-aae5-ad56797b4d07")) },
-                ];
+        private ApplicationDbContext _context;
+        private IMapper _mapper;
 
-        public TransacoesController(INotificador notificador, IUser appUser) : base(notificador, appUser)
+        //private static List<TransacaoModel> _listMock = [
+        //    new TransacaoModel { Data = DateTime.Now, Id = Guid.NewGuid(), Descricao = "Almoço 25/01/2025", Tipo = TipoTransacao.Saida, Valor = 50, Categoria = CategoriasController.CategoriasMock.FirstOrDefault(x => x.Id == Guid.Parse("5317b802-cf9e-4227-abd1-4f30168b4573")) },
+        //    new TransacaoModel { Data = DateTime.Now, Id = Guid.NewGuid(), Descricao = "Café 25/01/2025", Tipo = TipoTransacao.Saida, Valor = 20, Categoria = CategoriasController.CategoriasMock.FirstOrDefault(x => x.Id == Guid.Parse("5317b802-cf9e-4227-abd1-4f30168b4573")) },
+        //    new TransacaoModel { Data = DateTime.Now, Id = Guid.NewGuid(), Descricao = "Parcela MBA", Tipo = TipoTransacao.Saida, Valor = 400, Categoria = CategoriasController.CategoriasMock.FirstOrDefault(x => x.Id == Guid.Parse("2f069932-7281-4c35-bbcf-e0ced13d2a05")) },
+        //    new TransacaoModel { Data = DateTime.Now, Id = Guid.NewGuid(), Descricao = "Plano Saúde", Tipo = TipoTransacao.Saida, Valor = 300.50M, Categoria = CategoriasController.CategoriasMock.FirstOrDefault(x => x.Id == Guid.Parse("c9bdc038-48df-4a58-abb8-ec60b7a588cf")) },
+        //    new TransacaoModel { Data = DateTime.Now, Id = Guid.NewGuid(), Descricao = "Salário", Tipo = TipoTransacao.Entrada, Valor = 4000.50M, Categoria = CategoriasController.CategoriasMock.FirstOrDefault(x => x.Id == Guid.Parse("4634bff9-7800-4c77-aae5-ad56797b4d07")) },
+        //        ];
+
+        public TransacoesController(
+            ApplicationDbContext context,
+            IMapper mapper) : base()
         {
+            _context = context;
+            _mapper = mapper;
         }
 
-        [AllowAnonymous]
-        [HttpGet]
-        public async Task<IEnumerable<TransacaoModel>> ObterTodos()
-        {
-            return _listMock;
-            //return _mapper.Map<IEnumerable<FornecedorViewModel>>(await _fornecedorRepository.ObterTodos());
-        }
-
-        //[AllowAnonymous]
-        //[HttpGet("{data:datetime?}/{categoriaId:guid?}/{tipo}")]
-        //public async Task<IEnumerable<TransacaoModel>> Obter(DateTime? data, Guid? categoriaId, TipoTranscao? tipo)
+        //public TransacoesController(INotificador notificador, IUser appUser) : base(notificador, appUser)
         //{
-        //    return _listMock;
-        //    //return _mapper.Map<IEnumerable<FornecedorViewModel>>(await _fornecedorRepository.ObterTodos());
         //}
 
-        [AllowAnonymous]
-        [HttpPost("busca")]
-        public async Task<IEnumerable<TransacaoModel>> Busca(FiltroTransacaoModel busca)
+        
+        [HttpGet]
+        public async Task<IEnumerable<TransacaoViewModel>> ObterTodos()
         {
-            return _listMock;
-            //return _mapper.Map<IEnumerable<FornecedorViewModel>>(await _fornecedorRepository.ObterTodos());
+            //return _listMock;
+            return _mapper.Map<IEnumerable<TransacaoViewModel>>(await _context.Transacoes.ToListAsync());
         }
 
-        [AllowAnonymous]
-        [HttpGet("{id:guid}")]
-        public async Task<ActionResult<TransacaoModel>> ObterPorId(Guid id)
+        [HttpGet("filtro")]
+        public async Task<IEnumerable<TransacaoViewModel>> Obter(DateTime? data, Guid? categoriaId, GestaoContas.Shared.Domain.TipoTransacao? tipo)
         {
-            var transacao = _listMock.FirstOrDefault(x => x.Id == id);
+            var query = _context.Transacoes.AsQueryable();
+
+            if (data.HasValue)
+                query = query.Where(t => t.Data.HasValue && t.Data.Value.Date == data.Value.Date);
+
+            if (categoriaId.HasValue)
+                query = query.Where(t => t.CategoriaId == categoriaId.Value);
+
+            if (tipo.HasValue)
+                query = query.Where(t => t.TipoTransacao == (Shared.Domain.TipoTransacao)tipo.Value);
+
+            var transacoes = await query.ToListAsync();
+            return _mapper.Map<IEnumerable<TransacaoViewModel>>(transacoes);
+        }
+
+        
+        [HttpPost("busca")]
+        public async Task<IEnumerable<TransacaoViewModel>> Busca(FiltroTransacaoViewModel busca)
+        {
+            var query = _context.Transacoes.AsQueryable();
+            if (busca.DataInicial.HasValue)
+                query = query.Where(t => t.Data.HasValue && t.Data.Value.Date >= busca.DataInicial.Value.Date);
+
+            if (busca.DataFinal.HasValue)
+                query = query.Where(t => t.Data.HasValue && t.Data.Value.Date <= busca.DataFinal.Value.Date);
+
+            if (busca.ValorInicial.HasValue)
+                query = query.Where(t => t.Valor >= busca.ValorInicial.Value);
+
+            if (busca.ValorFinal.HasValue)
+                query = query.Where(t => t.Valor <= busca.ValorFinal.Value);
+
+            if (busca.CategoriaId.HasValue)
+                query = query.Where(t => t.CategoriaId == busca.CategoriaId.Value);
+
+            if (busca.Tipo.HasValue)
+                query = query.Where(t => t.TipoTransacao == (Shared.Domain.TipoTransacao)busca.Tipo.Value);
+
+            var transacoes = await query.ToListAsync();
+            return _mapper.Map<IEnumerable<TransacaoViewModel>>(transacoes);
+        }
+
+        
+        [HttpGet("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult<TransacaoViewModel>> ObterPorId(Guid id)
+        {
+            var transacao = await _context.Transacoes.FindAsync(id);
 
             if (transacao == null)
                 return NotFound();
 
-            return transacao;
+            return _mapper.Map<TransacaoViewModel>(transacao);
         }
 
         //[ClaimsAuthorize("Categoria", "Adicionar")]
         [HttpPost]
-        public async Task<ActionResult<TransacaoModel>> Adicionar(AdicionarTransacaoModel transacaoModel)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary), StatusCodes.Status400BadRequest)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult<TransacaoViewModel>> Adicionar(TransacaoViewModel transacaoViewModel)
         {
             if (!ModelState.IsValid)
-                return CustomResponse(ModelState);
+                return BadRequest(ModelState);
 
-            var novaTransacao = new TransacaoModel
-            {
-                Id = Guid.NewGuid(),
-                Data = transacaoModel.Data,
-                Categoria = CategoriasController.CategoriasMock.FirstOrDefault(x => x.Id == transacaoModel.CategoriaId),
-                Descricao = transacaoModel.Descricao,
-                Tipo = transacaoModel.Tipo,
-                Valor = transacaoModel.Valor,
-            };
-            _listMock.Add(novaTransacao);
+            var novaTransacao = _mapper.Map<Transacao>(transacaoViewModel);
+            novaTransacao.Id = Guid.NewGuid(); 
 
-            return CustomResponse(novaTransacao);
+            _context.Transacoes.Add(novaTransacao);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(ObterPorId), new { id = novaTransacao.Id },
+                _mapper.Map<TransacaoViewModel>(novaTransacao));
         }
 
-        //[ClaimsAuthorize("Categoria", "Atualizar")]
         [HttpPut("{id:guid}")]
-        public async Task<ActionResult<TransacaoModel>> Atualizar(Guid id, AdicionarTransacaoModel transacaoModel)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult<TransacaoViewModel>> Atualizar(Guid id, TransacaoViewModel transacaoViewModel)
         {
-            //if (id != transacaoModel.Id)
-            //{
-            //    NotificarErro("O id informado não é o mesmo que foi passado na query");
-            //    return CustomResponse(transacaoModel);
-            //}
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            if (!ModelState.IsValid) return CustomResponse(ModelState);
+            var transacaoExistente = await _context.Transacoes.FindAsync(id);
 
-            var transacaoIndex = _listMock.FindIndex(x => x.Id == id);
-            _listMock[transacaoIndex].Data = transacaoModel.Data;
-            _listMock[transacaoIndex].Valor = transacaoModel.Valor;
-            _listMock[transacaoIndex].Descricao = transacaoModel.Descricao;
-            _listMock[transacaoIndex].Tipo = transacaoModel.Tipo;
-            _listMock[transacaoIndex].Categoria = CategoriasController.CategoriasMock.FirstOrDefault(x => x.Id == transacaoModel.CategoriaId);
+            if (transacaoExistente == null)
+                return NotFound("Transação não encontrada.");
 
-            return CustomResponse(transacaoModel);
+            _mapper.Map(transacaoViewModel, transacaoExistente);
+
+            _context.Transacoes.Update(transacaoExistente);
+            await _context.SaveChangesAsync();
+
+            return Ok(_mapper.Map<TransacaoViewModel>(transacaoExistente));
         }
 
         //[ClaimsAuthorize("Categoria", "Excluir")]
         [HttpDelete("{id:guid}")]
-        public async Task<ActionResult<TransacaoModel>> Excluir(Guid id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult<TransacaoViewModel>> Excluir(Guid id)
         {
-            var transacao = _listMock.FirstOrDefault(x => x.Id == id);
+            var transacao = await _context.Transacoes.FindAsync(id);
 
             if (transacao == null)
-                return NotFound();
+                return NotFound("Transação não encontrada.");
 
-            _listMock.Remove(transacao);
+            _context.Transacoes.Remove(transacao);
+            await _context.SaveChangesAsync();
 
-            return CustomResponse(transacao);
+            return Ok(_mapper.Map<TransacaoViewModel>(transacao));
         }
 
-        [AllowAnonymous]
-        [HttpGet("{dataInicial:datetime}/{dataFinal:datetime}")]
-        public async Task<ResumoTranscoesModel> Resumo(DateTime dataInicial, DateTime dataFinal)
+        
+        [HttpGet("resumo/{dataInicial:datetime}/{dataFinal:datetime}")]
+        public async Task<ActionResult<ResumoTransacaoViewModel>> Resumo(DateTime dataInicial, DateTime dataFinal)
         {
-            return new ResumoTranscoesModel
-            {
-                Despesas  = 3000M,
-                Receitas = 4000M,
-                Saldo = 4000M - 3000M
-            };
-        }
+            var transacoes = await _context.Transacoes
+                .Where(t => t.Data >= dataInicial && t.Data <= dataFinal)
+                .ToListAsync();
 
+            decimal receitas = transacoes
+                .Where(t => t.TipoTransacao == Shared.Domain.TipoTransacao.Entrada)
+                .Sum(t => t.Valor);
+
+            decimal despesas = transacoes
+                .Where(t => t.TipoTransacao == Shared.Domain.TipoTransacao.Saida)
+                .Sum(t => t.Valor);
+
+            var resumo = new ResumoTransacaoViewModel
+            {
+                Despesas = despesas,
+                Receitas = receitas,
+                Saldo = receitas - despesas
+            };
+
+            return Ok(resumo);
+        }
     }
 }
