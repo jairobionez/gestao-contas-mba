@@ -17,7 +17,6 @@ namespace GestaoContas.Api.V1.Controllers
     [Route("api/v{version:apiVersion}/categorias")]
     public class CategoriasController : MainController
     {
-
         private ApplicationDbContext _context;
         private IMapper _mapper;
 
@@ -34,6 +33,7 @@ namespace GestaoContas.Api.V1.Controllers
         public CategoriasController(
             ApplicationDbContext context,
             IMapper mapper) : base()
+
         {
             _context = context;
             _mapper = mapper;
