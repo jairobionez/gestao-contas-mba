@@ -9,6 +9,7 @@ using GestaoContas.Shared.Domain;
 using Microsoft.AspNetCore.Identity;
 using GestaoContas.Api.Models;
 using Microsoft.Extensions.Options;
+using GestaoContas.Shared.Extensions;
 
 namespace GestaoContas.Api.V1.Controllers
 {
@@ -17,14 +18,14 @@ namespace GestaoContas.Api.V1.Controllers
     [Route("api/v{version:apiVersion}/usuarios")]
     public class UsuariosController : MainController
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
 
         //TODO: Fazer uma controller base específica para quem utiliza UserManager e JwtSettings
         public UsuariosController(
-            SignInManager<IdentityUser> signInManager, 
-            UserManager<IdentityUser> userManager, 
+            SignInManager<ApplicationUser> signInManager, 
+            UserManager<ApplicationUser> userManager, 
             IOptions<JwtSettings> jwtSettings, 
             ApplicationDbContext context, 
             IMapper mapper)
@@ -62,7 +63,7 @@ namespace GestaoContas.Api.V1.Controllers
         {
             if (!ModelState.IsValid) return ValidationProblem(ModelState);
 
-            var user = new IdentityUser()
+            var user = new ApplicationUser()
             {
                 UserName = model.Email,
                 Email = model.Email,

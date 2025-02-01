@@ -1,11 +1,12 @@
 ﻿using GestaoContas.Shared.Domain;
+using GestaoContas.Shared.Extensions;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace GestaoContas.Shared.Data.Contexts
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
     {
         public ApplicationDbContext()
         {
@@ -18,6 +19,8 @@ namespace GestaoContas.Shared.Data.Contexts
         }
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Categoria> Categorias { get; set; }
+        public DbSet<Transacao> Transacoes { get; set; }
+        public DbSet<Orcamento> Orcamentos { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

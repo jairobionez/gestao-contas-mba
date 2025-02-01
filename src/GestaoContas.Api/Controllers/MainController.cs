@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using GestaoContas.Api.Models;
 using GestaoContas.Shared.Data.Contexts;
+using GestaoContas.Shared.Domain;
+using GestaoContas.Shared.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -22,11 +24,11 @@ namespace GestaoContas.Api.Controllers
         protected Guid UsuarioId { get; set; }
         protected bool UsuarioAutenticado { get; set; }
 
-        protected readonly UserManager<IdentityUser> _userManager;
+        protected readonly UserManager<ApplicationUser> _userManager;
         private readonly JwtSettings _jwtSettings;
 
         public MainController(        
-            UserManager<IdentityUser> userManager,
+            UserManager<ApplicationUser> userManager,
             IOptions<JwtSettings> jwtSettings)
         {            
             _userManager = userManager;

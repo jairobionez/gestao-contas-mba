@@ -2,17 +2,14 @@
 
 namespace GestaoContas.Shared.Domain
 {
-    public class Categoria
+    public class Categoria : Entity
     {
-        public Categoria()
-        {
-            this.Id = Guid.NewGuid();
-        }
-
-        public Guid Id { get; private set; }        
-        public string Nome { get; private set; }
-        public string Descricao { get; private set;}
-        public bool Padrao { get; private set;}
+        public string Nome { get; set; }
+        public string Descricao { get; set;}
+        public bool Padrao { get; set;}
+        public bool Ativo { get; set;}
+        public IEnumerable<Transacao> Transacoes { get; set; }
+        public IEnumerable<Orcamento> Orcamentos { get; set; }
 
         public void Atualizar(Categoria categoria)
         {

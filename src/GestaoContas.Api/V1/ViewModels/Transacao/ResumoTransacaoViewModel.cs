@@ -1,6 +1,6 @@
-﻿namespace GestaoContas.Api.Models
+﻿namespace GestaoContas.Api.V1.ViewModels.Transacao
 {
-    public class ResumoTranscoesModel
+    public class ResumoTransacaoViewModel
     {
         public decimal? Saldo { get; set; }
         public decimal? Receitas { get; set; }

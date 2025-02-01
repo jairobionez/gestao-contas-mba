@@ -1,4 +1,5 @@
 using GestaoContas.Api.Configurations;
+using GestaoContas.Api.Helpers;
 using GestaoContas.Shared.CommonConfigurations;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
@@ -8,6 +9,7 @@ builder
     .AddSharedsConfiguration()
     .AddApiConfiguration()
     .AddSwaggerConfiguration()
+    .AddDbContextConfiguration()
     .AddContextConfiguration()
     .AddIdentityConfiguration();
 
@@ -31,5 +33,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.UseDbMigrationHelper();
 
 app.Run();
