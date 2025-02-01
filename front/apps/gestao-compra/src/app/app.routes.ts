@@ -7,7 +7,7 @@ export const appRoutes: Route[] = [
     loadChildren: () => import('./public/public.module').then(x => x.PublicModule)
   },
   {
-    path: 'authenticated',
+    path: '',
     loadChildren: () => import('./authenticated/authenticated.module').then(x => x.AuthenticatedModule)
   },
 ];

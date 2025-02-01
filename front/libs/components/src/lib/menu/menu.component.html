@@ -1,0 +1,48 @@
+<div class="menu">
+  <div class="menu-icons">
+    <!-- <div class="mo">
+      <div class="conteudo">
+
+        <p>Gestão contas</p>
+      </div>
+    </div>
+    ' -->
+    <div class="logo">
+      <img class="img" src="assets/imgs/logo_reduzida.png" alt="">
+      <p>Gestão compras</p>
+    </div>
+
+
+    <div class="menu-item" [routerLink]="['dashboard']">
+      <div class="d-flex" [ngClass]="{'ativo': ativo('dashboard')}">
+        <span class="material-symbols-outlined">
+          home
+        </span>
+
+        <p class="opcao font-16 ms-1">Inicio</p>
+      </div>
+    </div>
+
+    <div class="menu-item" [routerLink]="['categoria']">
+      <div class="d-flex" [ngClass]="{'ativo': ativo('categoria')}">
+        <span class="material-symbols-outlined">
+          home_storage
+          </span>
+        <p class="opcao font-16 ms-1">Categoria</p>
+      </div>
+    </div>
+    <!-- <div class="menu-item" [routerLink]="['contas']"  [ngClass]="{'ativo': ativo('contas')}">
+      <div>
+        <i class="fa-regular fa-clock pe-4"></i>
+        <span class="pe-4">Contas</span>
+      </div>
+    </div> -->
+  </div>
+
+  <!-- <div class="menu-user">
+    <div class="menu-logout mb-3">
+      <i class="pe-3 cor-secundaria-escura fad fa-sign-out-alt"></i>
+      <span class="">Sair</span>
+    </div>
+  </div> -->
+</div>

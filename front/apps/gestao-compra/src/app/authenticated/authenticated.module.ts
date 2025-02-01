@@ -3,14 +3,15 @@ import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { AuthenticatedRouting } from "./authenticated.routing";
 import { AuthenticatedComponent } from "./authenticated.component";
+import { HeaderModule, MenuModule } from "@front/components";
 
 @NgModule({
     imports: [
       CommonModule,
       RouterModule,
-    //   MenuModule,
+      MenuModule,
       AuthenticatedRouting,
-    //   HeaderModule,
+      HeaderModule,
     ],
     exports: [],
     declarations: [AuthenticatedComponent],

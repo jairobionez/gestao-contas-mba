@@ -33,16 +33,16 @@ export class NovaContaFormGroup extends FormGroupBase {
     return this.get('confirmarSenha') as FormControl;
   }
 
-  get endereco(): FormGroup {
-    return this.get('endereco') as FormGroup;
-  }
+  // get endereco(): FormGroup {
+  //   return this.get('endereco') as FormGroup;
+  // }
 
   constructor() {
     super({
       nome: fb.control('', [Validators.required]),
       sobrenome: fb.control('', [Validators.required]),
       cpf: fb.control('', [Validators.required, NgBrazilValidators.cpf]),
-      endereco: new EnderecoFormGroup,
+      // endereco: new EnderecoFormGroup,
       email: fb.control('', [Validators.required, Validators.email]),
       senha: fb.control('', [Validators.required]),
       confirmarSenha: fb.control('', [Validators.required])
