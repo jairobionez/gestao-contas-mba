@@ -120,6 +120,7 @@ namespace GestaoContas.Api.V1.Controllers
 
             var categoriaExistente = await _context.Categorias.FindAsync(id);
             if (categoriaExistente == null) return NotFound();
+            _listMock[categoriaIndex].Default = categoriaModel.Default;
 
             categoriaExistente.Atualizar(_mapper.Map<Categoria>(categoriaModel));
 

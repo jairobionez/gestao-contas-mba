@@ -19,7 +19,7 @@ import { NgxMaskDirective } from 'ngx-mask';
     MatButtonModule,
     MatFormFieldModule,
     ValidationMessagePipe,
-    NgxMaskDirective
+    NgxMaskDirective,
   ],
   exports: [],
   declarations: [LoginComponent, FormLoginComponent, FormaNovaContaComponent],
