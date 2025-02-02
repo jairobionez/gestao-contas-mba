@@ -1,7 +1,9 @@
 ﻿using GestaoContas.Shared.Data.Contexts;
 using GestaoContas.Shared.Domain;
+using GestaoContas.Shared.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace GestaoContas.Api.Helpers
 {
@@ -67,6 +69,12 @@ namespace GestaoContas.Api.Helpers
 
                 await userManager.CreateAsync(adminUser);
                 await userManager.AddToRoleAsync(adminUser, "Admin");
+                await userManager.AddClaimsAsync(adminUser, 
+                    new List<Claim>() { 
+                        new Claim(ClaimName.Categoria, $"{ClaimValue.Cadastrar},{ClaimValue.Editar},{ClaimValue.Excluir}", ClaimValueTypes.String), 
+                        new Claim(ClaimName.Orcamento, $"{ClaimValue.Cadastrar},{ClaimValue.Editar},{ClaimValue.Excluir}", ClaimValueTypes.String), 
+                        new Claim(ClaimName.Transacao, $"{ClaimValue.Cadastrar},{ClaimValue.Editar},{ClaimValue.Excluir}", ClaimValueTypes.String) 
+                    });
             }
 
             await context.Usuarios.AddAsync(new Usuario
@@ -90,7 +98,7 @@ namespace GestaoContas.Api.Helpers
                 };
                 normalUser.PasswordHash = userManager.PasswordHasher.HashPassword(normalUser, "Teste@123");
 
-                await userManager.CreateAsync(normalUser);
+                await userManager.CreateAsync(normalUser);                
             }
 
             await context.Usuarios.AddAsync(new Usuario
