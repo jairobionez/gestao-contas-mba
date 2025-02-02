@@ -13,8 +13,8 @@
     </div>
 
 
-    <div class="menu-item" [routerLink]="['dashboard']">
-      <div class="d-flex" [ngClass]="{'ativo': ativo('dashboard')}">
+    <div class="menu-item" [routerLink]="['inicio']">
+      <div class="d-flex" [ngClass]="{'ativo': ativo('inicio')}">
         <span class="material-symbols-outlined">
           home
         </span>
@@ -37,6 +37,15 @@
         <span class="pe-4">Contas</span>
       </div>
     </div> -->
+
+    <div class="menu-item" [routerLink]="['transacoes']">
+      <div class="d-flex" [ngClass]="{'ativo': ativo('transacoes')}">
+        <span class="material-symbols-outlined">
+          attach_money
+          </span>
+        <p class="opcao font-16 ms-1">Transações</p>
+      </div>
+    </div>
   </div>
 
   <!-- <div class="menu-user">

@@ -10,17 +10,22 @@ const routes: Routes = [
         {
           path: '',
           pathMatch: 'full',
-          redirectTo: 'dashboard',
+          redirectTo: 'inicio',
         },
         {
-          path: 'dashboard',
+          path: 'inicio',
           loadChildren: () =>
-            import('./dashboard/dashboard.module').then((x) => x.DashboardModule)
+            import('./inicio/inicio.module').then((x) => x.InicioModule)
         },
         {
           path: 'categoria',
           loadChildren: () =>
             import('./categoria/categoria.module').then((x) => x.CategoriaModule)
+        },
+        {
+          path: 'transacoes',
+          loadChildren: () =>
+            import('./transacao/transacao.module').then((x) => x.TransacaoModule)
         },
       ],
     },
