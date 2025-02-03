@@ -14,17 +14,18 @@ export const TokenInterceptor: HttpInterceptorFn = (req, next) => {
   const token = authService.getToken();
 
   if (token) {
-    authReq = addTokenHeader(req, token.accessToken);
+    authReq = addTokenHeader(req, token);
   }
 
-  return next(authReq).pipe(catchError(error => {
+  return next(authReq).pipe(catchError(data => {
     const erros = ['']; // TODO
 
-    switch (error?.status) {
+    switch (data?.status) {
       case 400:
-        handle.handleError(erros);
+        handle.handleError([data.error.detail])
         break;
       case 401:
+        handle.handleError([data.error.detail]);
         authService.logout();
         break;
       case 500:
@@ -34,7 +35,8 @@ export const TokenInterceptor: HttpInterceptorFn = (req, next) => {
         handle.handleError(['Falha ao se comunicar com o servidor']);
         break;
     }
-    return throwError(() => error);
+
+    return throwError(() => data);
   }));
 
   function addTokenHeader(request: HttpRequest<any>, token: string) {

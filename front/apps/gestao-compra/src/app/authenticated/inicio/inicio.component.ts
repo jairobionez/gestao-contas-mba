@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HeaderService } from '@front/services';
 
 @Component({
   selector: 'app-inicio',
@@ -6,8 +7,11 @@ import { Component, OnInit } from '@angular/core';
   standalone: false
 })
 
-export class InicioComponent implements OnInit {
-  constructor() { }
+export class InicioComponent {
 
-  ngOnInit() { }
+  constructor(
+    private headerService: HeaderService
+  ) {
+    this.headerService.alterarTitulo('Início');
+  }
 }

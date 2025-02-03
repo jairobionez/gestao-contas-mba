@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Observable, Subject, take } from 'rxjs';
 import { environment } from '../configuration';
+import { JwtPayload, LoginModel } from '@front/data';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +18,7 @@ export class AuthService {
     private http: HttpClient,
     private router: Router
   ) {
-    this.apiBase = `${environment.apiBase}/auth`;
+    this.apiBase = `${environment.apiBase}/autenticacao`;
   }
 
   public logout(): void {
@@ -25,47 +27,42 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
-  public isLoggedIn() {
-    return this.getUsuarioToken();
+  login(model: LoginModel): Observable<string> {
+    return this.http.post(`${this.apiBase}/login`, model, { responseType: 'text' });
   }
 
-  public getUserRole(): string {
-    const user = this.getUsuarioToken();
+  public isLoggedIn() {
+    return !!this.getToken();
+  }
 
-    if (user)
-      return user.claims.find((p: any) => p.type === 'role')!.value;
+  decodeToken(): JwtPayload  | null{
+    const token = this.getToken();
 
-    return '';
+    if(token) {
+      return jwtDecode(token);
+    }
+
+    return null;
+  }
+
+  public getUserRole(): string | undefined {
+    return this.decodeToken()?.role;
   }
 
   public setToken(token: string): void {
     localStorage.setItem('token', token);
   }
 
-  public getUsuarioToken(): any {
-    return JSON.parse(localStorage.getItem('token')!)?.usuarioToken as any;
+  public getToken(): string | null {
+    return localStorage.getItem('token');
   }
 
-  public getToken(): any {
-    return JSON.parse(localStorage.getItem('token')!) as any;
+  public getEmail(): string | undefined {
+    return this.decodeToken()?.email;
   }
 
-  public getEmail(): string {
-    const user = this.getUsuarioToken();
-
-    if (user)
-      return this.getUsuarioToken().email;
-
-    return '';
-  }
-
-  public getNome(): string {
-    const user = this.getUsuarioToken();
-
-    if (user)
-      return this.getUsuarioToken().nome;
-
-    return '';
+  public getNome(): string | undefined {
+    return this.decodeToken()?.nome;
   }
 
   public setUrl(url: string) {
@@ -87,10 +84,10 @@ export class AuthService {
   }
 
   public getId(): string {
-    const user = this.getUsuarioToken();
+    // const user = this.getUsuarioToken();
 
-    if (user)
-      return this.getUsuarioToken().id;
+    // if (user)
+    //   return this.getUsuarioToken().id;
 
     return '';
   }

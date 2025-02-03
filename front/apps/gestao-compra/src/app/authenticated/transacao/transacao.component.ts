@@ -1,12 +1,17 @@
 import { Component, OnInit } from '@angular/core';
+import { HeaderService } from '@front/services';
 
 @Component({
   selector: 'app-transacao',
   template: '<router-outlet></router-outlet>',
   standalone: false
 })
-export class TransacaoComponent implements OnInit {
-  constructor() { }
+export class TransacaoComponent {
 
-  ngOnInit() { }
+  constructor(
+    private headerService: HeaderService
+  ) {
+    this.headerService.alterarTitulo('Transações');
+
+  }
 }

@@ -15,7 +15,7 @@ html {
 
 :root {
   @include mat.snack-bar-overrides((
-    container-color: transparent,
+    container-color: white,
   ));
 }
 

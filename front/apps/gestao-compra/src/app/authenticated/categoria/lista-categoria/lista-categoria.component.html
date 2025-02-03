@@ -18,6 +18,12 @@
       <mat-cell *matCellDef="let element" data-label="Nome"> {{element.nome}} </mat-cell>
     </ng-container>
 
+    <ng-container matColumnDef="descricao">
+      <mat-header-cell *matHeaderCellDef> Descrição </mat-header-cell>
+      <mat-cell *matCellDef="let element" data-label="Descrição"> {{element.descricao}} </mat-cell>
+    </ng-container>
+
+
     <ng-container matColumnDef="ativo">
       <mat-header-cell *matHeaderCellDef> Ativo </mat-header-cell>
       <mat-cell *matCellDef="let element" data-label="Ativo">
@@ -36,7 +42,7 @@
           edit
         </span>
 
-        <span class="material-symbols-outlined cor-vermelho ms-2 cursor-pointer" (click)="removerCategoria()">
+        <span class="material-symbols-outlined cor-vermelho ms-2 cursor-pointer" (click)="removerCategoria(element.id)">
           delete
         </span>
       </mat-cell>

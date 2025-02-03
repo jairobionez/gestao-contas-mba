@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { HeaderService } from '@front/services';
+import { AuthService, HeaderService } from '@front/services';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -11,16 +11,18 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   titulo?: string = "Dashboard";
-  usuario?: any = {nome: "Admin", email: "admin@gmail.com"};
   destroy$ = new Subject<void>;
 
   constructor(
     private router: Router,
-    private headerService: HeaderService
+    private headerService: HeaderService,
+    public authService: AuthService
   ) {
     this.headerService.obterNovoTitulo()
       .pipe(takeUntil(this.destroy$))
       .subscribe(titulo => this.titulo = titulo);
+
+    this.authService.decodeToken();
   }
 
   ngOnInit(): void {
@@ -29,5 +31,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.destroy$.next();
+  }
+
+  logout(): void {
+    this.authService.logout();
   }
 }

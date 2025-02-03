@@ -2,6 +2,7 @@ import { NgModule } from "@angular/core";
 import { HeaderComponent } from "./header.component";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
+import { MatIconModule } from "@angular/material/icon";
 
 
 @NgModule({
@@ -10,6 +11,7 @@ import { RouterModule } from "@angular/router";
   imports: [
     RouterModule,
     CommonModule,
+    MatIconModule
   ],
   providers: [],
 })
