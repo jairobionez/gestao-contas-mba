@@ -41,7 +41,7 @@ namespace GestaoContas.Shared.Data.Contexts
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.ApplyConfigurationsFromAssembly((typeof(ApplicationDbContext).Assembly));
+            builder.ApplyConfigurationsFromAssembly((typeof(ApplicationDbContext).Assembly));            
             //builder.SeedUsuarioAplicacaoAdmin(Users, Autores);
         }
     }
