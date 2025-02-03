@@ -30,9 +30,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.handle.erros$.pipe(takeUntil(this.destroyed$)).subscribe(erros => {
-      debugger;
       this._snackBar.openFromComponent(AlertComponent, {
-        duration: 5000000,
+        duration: 5000,
         data: {
           title: 'Erro!',
           subtitle: erros.join("<br>"),

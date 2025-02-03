@@ -20,11 +20,11 @@ export class ModalInfoComponent implements OnInit {
   ngOnInit() { }
 
   voltar(): void {
-
+    this.dialogRef.close(false);
   }
 
   confirmar(): void {
-
+    this.dialogRef.close(true);
   }
 
 }

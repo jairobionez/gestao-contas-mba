@@ -14,6 +14,10 @@ export class CategoriaFormGroup extends FormGroupBase {
     return this.get('nome') as FormControl;
   }
 
+  get descricao(): FormControl {
+    return this.get('descricao') as FormControl;
+  }
+
   get default(): FormControl {
     return this.get('default') as FormControl;
   }
@@ -23,6 +27,7 @@ export class CategoriaFormGroup extends FormGroupBase {
     super({
       id: fb.control(null),
       nome: fb.control('', Validators.required),
+      descricao: fb.control('', Validators.required),
       default: fb.control(false)
     });
   }

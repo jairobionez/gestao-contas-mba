@@ -11,11 +11,11 @@ const routes: Routes = [
     children: [
       {
         path: 'login',
-        component: FormLoginComponent
+        component: FormLoginComponent,
       },
       {
         path: 'nova-conta',
-        component: FormaNovaContaComponent
+        component: FormaNovaContaComponent,
       }
     ]
   }

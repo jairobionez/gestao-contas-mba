@@ -1,8 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CategoriaResponseModel } from '@front/data';
-import { CategoriaService, HeaderService } from '@front/services';
-import { filter, take } from 'rxjs';
+import { CategoriaService } from '@front/services';
+import { filter, switchMap, take } from 'rxjs';
 import { CreateEditCategoriaComponent } from '../create-edit-categoria/create-edit.categoria.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AlertComponent, AlertOptions, ModalInfoComponent, ModalInfoModel } from '@front/components';
@@ -18,29 +18,24 @@ export class ListaCategoriaComponent implements OnInit {
   readonly dialog = inject(MatDialog);
   private _snackBar = inject(MatSnackBar);
 
-  displayedColumns: string[] = ['nome', 'ativo', 'acoes'];
-  categorias: CategoriaResponseModel[] = [
-    {
-      nome: 'teste',
-      ativo: true,
-      default: true,
-      id: '123'
-    }
-  ];
+  displayedColumns: string[] = ['nome', 'descricao', 'ativo', 'acoes'];
+  categorias: CategoriaResponseModel[] = [];
 
   constructor(
-    private headerService: HeaderService,
     private categoriaService: CategoriaService,
   ) {
-    this.headerService.alterarTitulo('Categorias');
   }
 
   ngOnInit() {
+    this.getCategorias();
+  }
+
+  getCategorias(): void {
     this.categoriaService.get()
-      .pipe(take(1))
-      .subscribe(data => {
-        this.categorias = data;
-      });
+    .pipe(take(1))
+    .subscribe(data => {
+      this.categorias = data;
+    });
   }
 
   novaCategoria(): void {
@@ -61,6 +56,8 @@ export class ListaCategoriaComponent implements OnInit {
             status: 'sucesso'
           } as AlertOptions
         });
+
+        this.getCategorias();
       });
   }
 
@@ -76,17 +73,19 @@ export class ListaCategoriaComponent implements OnInit {
         filter(data => data))
       .subscribe(_ => {
         this._snackBar.openFromComponent(AlertComponent, {
-          duration: 5000000,
+          duration: 5000,
           data: {
             title: 'Sucesso!',
             subtitle: 'Categoria alterada',
             status: 'sucesso'
           } as AlertOptions
         });
+
+        this.getCategorias();
       });
   }
 
-  removerCategoria(): void {
+  removerCategoria(categoriaId: any): void {
     const ref = this.dialog.open(ModalInfoComponent, {
       width: '50rem',
       data: {
@@ -96,6 +95,24 @@ export class ListaCategoriaComponent implements OnInit {
         btnCancel: 'Voltar'
       } as ModalInfoModel
     });
+
+    ref.afterClosed()
+      .pipe(
+        take(1),
+        filter(data => data),
+      switchMap(data => this.categoriaService.delete(categoriaId)))
+      .subscribe(_ => {
+        this._snackBar.openFromComponent(AlertComponent, {
+          duration: 5000,
+          data: {
+            title: 'Sucesso!',
+            subtitle: 'Categoria removida',
+            status: 'sucesso'
+          } as AlertOptions
+        });
+
+        this.getCategorias();
+      });
   }
 
 }

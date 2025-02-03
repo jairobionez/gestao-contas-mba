@@ -20,8 +20,7 @@ namespace GestaoContas.Api.V1.Controllers
             SignInManager<IdentityUser<Guid>> signInManager,
             UserManager<IdentityUser<Guid>> userManager,
             IOptions<JwtSettings> jwtSettings,
-            ApplicationDbContext context)
-            :base(userManager, jwtSettings)
+            ApplicationDbContext context) :base(userManager, jwtSettings, context)
         {
             _signInManager = signInManager;            
             _context = context;

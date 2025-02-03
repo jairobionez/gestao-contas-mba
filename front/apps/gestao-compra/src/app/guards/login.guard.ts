@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '@front/services';
 import { Observable } from 'rxjs';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class LoginGuard implements CanActivate {
   constructor(
     private authService: AuthService,

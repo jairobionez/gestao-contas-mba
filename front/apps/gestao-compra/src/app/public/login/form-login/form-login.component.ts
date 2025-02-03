@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '@front/services';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-form-login',
@@ -15,15 +17,33 @@ export class FormLoginComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {
     this.form = fb.group({
-      usuario: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email]],
       senha: ['', [Validators.required]]
     })
   }
 
   ngOnInit() { }
+
+
+  login():void {
+    const { value, valid } = this.form;
+
+    if(valid) {
+      this.authService.login(value)
+      .pipe(take(1))
+      .subscribe(token => {
+        if(token) {
+          this.authService.setToken(token);
+          this.authService.setUrl('inicio');
+          this.router.navigate(['inicio']);
+        }
+      });
+    }
+  }
 
   novaConta(): void {
     this.router.navigate(['/nova-conta']);

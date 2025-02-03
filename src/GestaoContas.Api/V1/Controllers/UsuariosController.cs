@@ -27,7 +27,7 @@ namespace GestaoContas.Api.V1.Controllers
             IOptions<JwtSettings> jwtSettings, 
             ApplicationDbContext context, 
             IMapper mapper)
-            :base(userManager, jwtSettings) 
+            :base(userManager, jwtSettings, context) 
         {
             _signInManager = signInManager;
             _context = context;

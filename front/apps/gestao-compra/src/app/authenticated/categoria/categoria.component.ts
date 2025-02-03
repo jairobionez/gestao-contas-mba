@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HeaderService } from '@front/services';
 
 @Component({
   selector: 'app-categoria',
@@ -6,8 +7,11 @@ import { Component, OnInit } from '@angular/core';
   standalone: false
 })
 
-export class CategoriaComponent implements OnInit {
-  constructor() { }
+export class CategoriaComponent {
 
-  ngOnInit() { }
+  constructor(
+    private headerService: HeaderService
+  ) {
+    this.headerService.alterarTitulo('Categorias');
+  }
 }
