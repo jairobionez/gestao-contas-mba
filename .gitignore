@@ -398,3 +398,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+src/GestaoContas.Shared/Data/Database/GestaoContas.db-wal
+src/GestaoContas.Shared/Data/Database/GestaoContas.db-shm
+src/GestaoContas.Shared/Data/Database/GestaoContas.db
