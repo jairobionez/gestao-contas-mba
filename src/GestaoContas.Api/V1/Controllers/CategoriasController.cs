@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using GestaoContas.Shared.Domain;
+using GestaoContas.Api.Extensions.Authorizations;
+using GestaoContas.Shared.Extensions;
 
 namespace GestaoContas.Api.V1.Controllers
 {    
@@ -85,7 +87,7 @@ namespace GestaoContas.Api.V1.Controllers
             return _mapper.Map<CategoriaViewModel>(categoria);
         }
 
-        //[ClaimsAuthorize("Categoria", "Adicionar")]
+        [ClaimsAuthorize(ClaimName.Categoria, ClaimValue.Cadastrar)]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -103,8 +105,8 @@ namespace GestaoContas.Api.V1.Controllers
             return CreatedAtAction(nameof(Get), categoria.Id, _mapper.Map<CategoriaViewModel>(categoria));
         }
 
-        //[ClaimsAuthorize("Categoria", "Atualizar")]
-
+        
+        [ClaimsAuthorize(ClaimName.Categoria, ClaimValue.Editar)]
         [HttpPut("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -139,7 +141,7 @@ namespace GestaoContas.Api.V1.Controllers
             return NoContent();
         }
 
-        //[ClaimsAuthorize("Categoria", "Excluir")]
+        [ClaimsAuthorize(ClaimName.Categoria, ClaimValue.Excluir)]
         [HttpDelete("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -152,7 +154,7 @@ namespace GestaoContas.Api.V1.Controllers
 
             if (categoria == null) return NotFound();
 
-            //if (!categoria.PodeSermodificadoOuExcluidoPor(User)) return Unauthorized();
+            if (categoria.Padrao) return BadRequest();
 
             _context.Categorias.Remove(categoria);
             await _context.SaveChangesAsync();

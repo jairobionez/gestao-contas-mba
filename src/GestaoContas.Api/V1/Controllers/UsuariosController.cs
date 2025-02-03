@@ -8,6 +8,8 @@ using GestaoContas.Shared.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using GestaoContas.Shared.Extensions;
 
 namespace GestaoContas.Api.V1.Controllers
 {    
@@ -34,8 +36,8 @@ namespace GestaoContas.Api.V1.Controllers
             _mapper = mapper;
         }
 
-        
 
+        [AllowAnonymous]
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<UsuarioViewModel>> ObterPorId(Guid id)
         {
@@ -44,6 +46,7 @@ namespace GestaoContas.Api.V1.Controllers
             return Ok(_mapper.Map<UsuarioViewModel>(await usuario));
         }
 
+        [AllowAnonymous]
         [HttpGet()]
         public async Task<ActionResult<IEnumerable<UsuarioViewModel>>> ObterTodos()
         {
@@ -52,6 +55,7 @@ namespace GestaoContas.Api.V1.Controllers
             return Ok(_mapper.Map<IEnumerable<UsuarioViewModel>>(await usuarios));
         }
 
+        [AllowAnonymous]
         [HttpPost()]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -59,7 +63,7 @@ namespace GestaoContas.Api.V1.Controllers
         [ProducesDefaultResponseType]
         public async Task<ActionResult> Cadastrar(RegisterViewModel model)
         {
-            if (!ModelState.IsValid) return ValidationProblem(ModelState);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var user = new IdentityUser<Guid>()
             {
@@ -70,6 +74,12 @@ namespace GestaoContas.Api.V1.Controllers
 
             var result = await _userManager.CreateAsync(user, model.Senha!);
 
+            await _userManager.AddClaimsAsync(user,
+                    new List<Claim>() {
+                        new Claim(ClaimName.Categoria, $"{ClaimValue.Cadastrar},{ClaimValue.Editar},{ClaimValue.Excluir}", ClaimValueTypes.String),
+                        new Claim(ClaimName.Orcamento, $"{ClaimValue.Cadastrar},{ClaimValue.Editar},{ClaimValue.Excluir}", ClaimValueTypes.String),
+                        new Claim(ClaimName.Transacao, $"{ClaimValue.Cadastrar},{ClaimValue.Editar},{ClaimValue.Excluir}", ClaimValueTypes.String)
+                    });
 
             if (!result.Succeeded) return Problem("Falha ao cadastrar usuario", statusCode: StatusCodes.Status400BadRequest);
 

@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http;
+using GestaoContas.Api.Extensions.Authorizations;
+using GestaoContas.Shared.Extensions;
 
 namespace GestaoContas.Api.V1.Controllers
 {    
@@ -42,14 +44,14 @@ namespace GestaoContas.Api.V1.Controllers
 
         
         [HttpGet]
-        public async Task<IEnumerable<TransacaoViewModel>> ObterTodos()
+        public async Task<IEnumerable<TransacaoViewModel>> Get()
         {
             //return _listMock;
             return _mapper.Map<IEnumerable<TransacaoViewModel>>(await _context.Transacoes.ToListAsync());
         }
 
         [HttpGet("filtro")]
-        public async Task<IEnumerable<TransacaoViewModel>> Obter(DateTime? data, Guid? categoriaId, GestaoContas.Shared.Domain.TipoTransacao? tipo)
+        public async Task<IEnumerable<TransacaoViewModel>> Get(DateTime? data, Guid? categoriaId, GestaoContas.Shared.Domain.TipoTransacao? tipo)
         {
             var query = _context.Transacoes.AsQueryable();
 
@@ -68,7 +70,7 @@ namespace GestaoContas.Api.V1.Controllers
 
         
         [HttpPost("busca")]
-        public async Task<IEnumerable<TransacaoViewModel>> Busca(FiltroTransacaoViewModel busca)
+        public async Task<IEnumerable<TransacaoViewModel>> Get(FiltroTransacaoViewModel busca)
         {
             var query = _context.Transacoes.AsQueryable();
             if (busca.DataInicial.HasValue)
@@ -98,7 +100,7 @@ namespace GestaoContas.Api.V1.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<TransacaoViewModel>> ObterPorId(Guid id)
+        public async Task<ActionResult<TransacaoViewModel>> Get(Guid id)
         {
             var transacao = await _context.Transacoes.FindAsync(id);
 
@@ -108,7 +110,7 @@ namespace GestaoContas.Api.V1.Controllers
             return _mapper.Map<TransacaoViewModel>(transacao);
         }
 
-        //[ClaimsAuthorize("Categoria", "Adicionar")]
+        [ClaimsAuthorize(ClaimName.Transacao, ClaimValue.Cadastrar)]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary), StatusCodes.Status400BadRequest)]
@@ -124,10 +126,11 @@ namespace GestaoContas.Api.V1.Controllers
             _context.Transacoes.Add(novaTransacao);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(ObterPorId), new { id = novaTransacao.Id },
+            return CreatedAtAction(nameof(Get), new { id = novaTransacao.Id },
                 _mapper.Map<TransacaoViewModel>(novaTransacao));
         }
 
+        [ClaimsAuthorize(ClaimName.Transacao, ClaimValue.Editar)]
         [HttpPut("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary), StatusCodes.Status400BadRequest)]
@@ -151,7 +154,7 @@ namespace GestaoContas.Api.V1.Controllers
             return Ok(_mapper.Map<TransacaoViewModel>(transacaoExistente));
         }
 
-        //[ClaimsAuthorize("Categoria", "Excluir")]
+        [ClaimsAuthorize(ClaimName.Transacao, ClaimValue.Excluir)]
         [HttpDelete("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]

@@ -29,21 +29,31 @@ namespace GestaoContas.Api.Controllers
         {
             var user = await _userManager.FindByEmailAsync(email);
             var roles = await _userManager.GetRolesAsync(user!);
+            var claims = await _userManager.GetClaimsAsync(user!);
             var usuario = await _context.Usuarios.FirstOrDefaultAsync(p => p.Id == user.Id);
 
-            var claims = new List<Claim>();
-            claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
-            claims.Add(new Claim(ClaimTypes.NameIdentifier, await _userManager.GetUserIdAsync(user!)));
-            claims.Add(new Claim(ClaimTypes.Email, email));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user!.Id.ToString()));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Email, user!.Email!));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Nbf, ToUnixEpocheDate(DateTime.UtcNow).ToString()));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpocheDate(DateTime.Now).ToString(), ClaimValueTypes.Integer64));
             claims.Add(new Claim("nome", usuario?.Nome));
 
-            var tokenHandler = new JwtSecurityTokenHandler();
+            foreach (var role in roles)            
+                claims.Add(new Claim("role", role));
+            
 
+            var identityClaims = new ClaimsIdentity(claims);
+
+
+            var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtSettings.Segredo!);
+
+
 
             var token = tokenHandler.CreateToken(new SecurityTokenDescriptor()
             {
-                Subject = new ClaimsIdentity(claims),
+                Subject = identityClaims,
                 Issuer = _jwtSettings.Emissor,
                 Audience = _jwtSettings.Audiencia,
                 Expires = DateTime.UtcNow.AddHours(_jwtSettings.HorasParaExpirar),
@@ -51,6 +61,11 @@ namespace GestaoContas.Api.Controllers
             });
 
             return tokenHandler.WriteToken(token);
+        }
+
+        private static long ToUnixEpocheDate(DateTime date)
+        {
+            return (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
         }
     }
 }
