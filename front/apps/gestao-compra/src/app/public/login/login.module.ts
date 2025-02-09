@@ -10,6 +10,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormaNovaContaComponent } from './form-nova-conta/form-nova-conta.component';
 import { ValidationMessagePipe } from '@front/forms';
 import { NgxMaskDirective } from 'ngx-mask';
+import { UsuarioService } from '@front/services';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   imports: [
@@ -20,10 +22,11 @@ import { NgxMaskDirective } from 'ngx-mask';
     MatFormFieldModule,
     ValidationMessagePipe,
     NgxMaskDirective,
+    MatSnackBarModule
   ],
   exports: [],
   declarations: [LoginComponent, FormLoginComponent, FormaNovaContaComponent],
-  providers: []
+  providers: [UsuarioService]
 })
 export class LoginModule {
 }
