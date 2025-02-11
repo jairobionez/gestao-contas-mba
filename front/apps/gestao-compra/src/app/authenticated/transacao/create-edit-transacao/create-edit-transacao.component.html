@@ -11,11 +11,11 @@
             <div class="col-6">
                 <mat-form-field class="example-full-width custom-form-field" appearance="outline">
                     <mat-label>Tipo</mat-label>
-                    <mat-select formControlName="tipo">
+                    <mat-select formControlName="tipoTransacao">
                         <mat-option [value]="0">Entrada</mat-option>
                         <mat-option [value]="1">Saída</mat-option>
                     </mat-select>
-                    <mat-error>{{form.tipo?.errors! | validationMessage}}</mat-error>
+                    <mat-error>{{form.tipoTransacao?.errors! | validationMessage}}</mat-error>
                 </mat-form-field>
             </div>
         </div>
@@ -36,7 +36,7 @@
             <div class="col-6">
                 <mat-form-field class="example-full-width custom-form-field" appearance="outline">
                     <mat-label>Valor R$</mat-label>
-                    <input matInput formControlName="valor" />
+                    <input matInput formControlName="valor" type="number" />
                     <mat-error>{{form.valor?.errors! | validationMessage}}</mat-error>
                 </mat-form-field>
             </div>
@@ -45,7 +45,10 @@
             <div class="col-6">
                 <mat-form-field class="example-full-width custom-form-field" appearance="outline">
                     <mat-label>Data</mat-label>
-                    <input matInput formControlName="data" />
+                    <input matInput [matDatepicker]="picker" formControlName="data">
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
                     <mat-error>{{form.data?.errors! | validationMessage}}</mat-error>
                 </mat-form-field>
             </div>
@@ -54,7 +57,7 @@
             <div class="col-12">
                 <mat-form-field class="example-full-width custom-form-field" appearance="outline">
                     <mat-label>Descrição</mat-label>
-                    <textarea matInput placeholder=""></textarea>
+                    <textarea matInput placeholder="" formControlName="descricao"></textarea>
                 </mat-form-field>
             </div>
         </div>
@@ -63,6 +66,10 @@
 
         <div class="footer-modal">
             <button mat-raised-button (click)="voltar()">Voltar</button>
-            <button class="ms-3" mat-flat-button (click)="salvar()">Criar transação</button>
+            @if(!data?.id) {
+                <button class="ms-3" mat-flat-button (click)="salvar()">Criar transação</button>
+                }@else {
+                    <button class="ms-3" mat-flat-button (click)="salvar()">Salvar transação</button>
+                }
         </div>
     </div>

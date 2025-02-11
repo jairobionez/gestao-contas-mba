@@ -1,7 +1,6 @@
 
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { FormGroupBase } from "../form.base";
-import { number } from "ng-brazil";
 
 const fb = new FormBuilder();
 
@@ -11,8 +10,8 @@ export class TransacaoFormGroup extends FormGroupBase {
     return this.get('id') as FormControl;
   }
 
-  get tipo(): FormControl {
-    return this.get('tipo') as FormControl;
+  get tipoTransacao(): FormControl {
+    return this.get('tipoTransacao') as FormControl;
   }
 
   get categoriaId(): FormControl {
@@ -34,10 +33,10 @@ export class TransacaoFormGroup extends FormGroupBase {
   constructor() {
     super({
       id: fb.control(null),
-      tipo: fb.control(0, Validators.required),
+      tipoTransacao: fb.control(0, Validators.required),
       categoriaId: fb.control('', Validators.required),
-      valor: fb.control('', Validators.required),
-      data: fb.control('', Validators.required),
+      valor: fb.control(0, Validators.required),
+      data: fb.control('' , Validators.required),
       descricao: fb.control('')
     });
   }
