@@ -1,5 +1,8 @@
-﻿using GestaoContas.Shared.Data.Contexts;
-using GestaoContas.Shared.Domain;
+﻿using AutoMapper;
+using GestaoContas.Api.Extensions.Jwts;
+using GestaoContas.Api.V2.ViewModels.Autenticacoes;
+using GestaoContas.Business.Interfaces;
+using GestaoContas.Data.Contexts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -19,25 +22,27 @@ namespace GestaoContas.Api.Controllers
         public MainSignInController(
             UserManager<IdentityUser<Guid>> userManager,
             IOptions<JwtSettings> jwtSettings,
-            ApplicationDbContext context) : base()
+            ApplicationDbContext context,
+            INotificador notificador, IMapper mapper, IUser appUser) 
+            : base(notificador,mapper,appUser)
         {
             _userManager = userManager;
             _jwtSettings = jwtSettings.Value;
             _context = context;
         }
-        protected async Task<string> GetJwt(string email)
+        protected async Task<LoginResponseViewModel> GetJwt(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
             var roles = await _userManager.GetRolesAsync(user!);
             var claims = await _userManager.GetClaimsAsync(user!);
-            var usuario = await _context.Usuarios.FirstOrDefaultAsync(p => p.Id == user.Id);
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(p => p.Id == user!.Id);
 
             claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user!.Id.ToString()));
             claims.Add(new Claim(JwtRegisteredClaimNames.Email, user!.Email!));
             claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
             claims.Add(new Claim(JwtRegisteredClaimNames.Nbf, ToUnixEpocheDate(DateTime.UtcNow).ToString()));
             claims.Add(new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpocheDate(DateTime.Now).ToString(), ClaimValueTypes.Integer64));
-            claims.Add(new Claim("nome", usuario?.Nome));
+            claims.Add(new Claim("nome", usuario?.Nome!));
 
             foreach (var role in roles)            
                 claims.Add(new Claim("role", role));
@@ -60,7 +65,19 @@ namespace GestaoContas.Api.Controllers
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             });
 
-            return tokenHandler.WriteToken(token);
+            return new LoginResponseViewModel()
+            {
+                AccessToken = tokenHandler.WriteToken(token),
+                ExpiresIn = TimeSpan.FromHours(_jwtSettings.HorasParaExpirar).TotalSeconds,
+                UserToken = new UserTokenViewModel()
+                {
+                    Id = user.Id.ToString(),
+                    Email = user.Email,
+                    Claims = claims.Select(c=> new ClaimViewModel() { Type = c.Type, Value = c.Value })
+                }
+            };
+
+            
         }
 
         private static long ToUnixEpocheDate(DateTime date)

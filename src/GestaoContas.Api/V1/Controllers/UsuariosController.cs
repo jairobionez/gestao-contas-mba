@@ -1,39 +1,41 @@
 ﻿using GestaoContas.Api.Controllers;
 using GestaoContas.Api.V1.ViewModels.Usuarios;
-using GestaoContas.Shared.Data.Contexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
-using GestaoContas.Shared.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-using GestaoContas.Shared.Extensions;
+using GestaoContas.Business.Models;
+using GestaoContas.Data.Contexts;
+using GestaoContas.Business.Interfaces;
+using GestaoContas.Api.Extensions.Jwts;
+using Asp.Versioning;
 
 namespace GestaoContas.Api.V1.Controllers
-{    
+{
     [ApiController]
-    [ApiVersion("1.0")]
+    [ApiVersion("1.0", Deprecated = true)]
     [Route("api/v{version:apiVersion}/usuarios")]
     public class UsuariosController : MainSignInController
     {
         private readonly SignInManager<IdentityUser<Guid>> _signInManager;
         private readonly ApplicationDbContext _context;
-        private readonly IMapper _mapper;
-
+        
         //TODO: Fazer uma controller base específica para quem utiliza UserManager e JwtSettings
         public UsuariosController(
             SignInManager<IdentityUser<Guid>> signInManager, 
             UserManager<IdentityUser<Guid>> userManager, 
             IOptions<JwtSettings> jwtSettings, 
             ApplicationDbContext context, 
-            IMapper mapper)
-            :base(userManager, jwtSettings, context) 
+            IMapper mapper, 
+            INotificador notificador,
+            IUser appUser)
+            :base(userManager, jwtSettings, context, notificador,mapper, appUser) 
         {
             _signInManager = signInManager;
-            _context = context;
-            _mapper = mapper;
+            _context = context;            
         }
 
 
@@ -83,16 +85,12 @@ namespace GestaoContas.Api.V1.Controllers
 
             if (!result.Succeeded) return Problem("Falha ao cadastrar usuario", statusCode: StatusCodes.Status400BadRequest);
 
-            var autor = new Usuario()
-            {
-                Nome = model.Nome,
-                Id = Guid.Parse(await _userManager.GetUserIdAsync(user))
-            };
-            await _context.AddAsync(autor);
+            var usuario = new Usuario(Guid.Parse(await _userManager.GetUserIdAsync(user)), model.Nome, model.Email);
+            await _context.AddAsync(usuario);
             await _context.SaveChangesAsync();
 
             await _signInManager.SignInAsync(user, false);
-            return Ok(await GetJwt(model.Email!));
+            return Ok(GetJwt(model.Email!).Result.AccessToken);
         }
 
         //[HttpDelete("{id:guid}")]

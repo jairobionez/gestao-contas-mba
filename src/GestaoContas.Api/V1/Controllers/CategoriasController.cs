@@ -2,25 +2,24 @@
 using GestaoContas.Api.Controllers;
 using GestaoContas.Api.Models;
 using GestaoContas.Api.V1.ViewModels.Categorias;
-using GestaoContas.Shared.Data.Contexts;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using GestaoContas.Shared.Domain;
 using GestaoContas.Api.Extensions.Authorizations;
-using GestaoContas.Shared.Extensions;
+using GestaoContas.Business.Models;
+using GestaoContas.Data.Contexts;
+using GestaoContas.Business.Interfaces;
+using Asp.Versioning;
 
 namespace GestaoContas.Api.V1.Controllers
-{    
+{
     [ApiController]
-    [ApiVersion("1.0")]
+    [ApiVersion("1.0", Deprecated = true)]
     [Route("api/v{version:apiVersion}/categorias")]
     public class CategoriasController : MainController
     {
         private ApplicationDbContext _context;
-        private IMapper _mapper;
+        
 
         //private static List<CategoriaModel> _listMock = [
         //            new CategoriaModel { Id = Guid.Parse("5317b802-cf9e-4227-abd1-4f30168b4573"), Nome = "Alimentação", Ativo = true },
@@ -34,11 +33,14 @@ namespace GestaoContas.Api.V1.Controllers
 
         public CategoriasController(
             ApplicationDbContext context,
-            IMapper mapper) : base()
+            IMapper mapper,
+            INotificador notificador
+            , IUser appUser) : 
+            base(notificador,mapper, appUser)
 
         {
             _context = context;
-            _mapper = mapper;
+            
         }
 
         //public CategoriasController(INotificador notificador, IUser appUser) : base(notificador, appUser)
@@ -66,7 +68,7 @@ namespace GestaoContas.Api.V1.Controllers
             //Motta adicionou
             return _mapper.Map<IEnumerable<CategoriaViewModel>>(
                 await _context.Categorias
-                    .Where(c => c.Nome.ToLower().Contains(busca.ToLower()) && c.Ativo)
+                    .Where(c => c.Nome!.ToLower().Contains(busca.ToLower()) && c.Ativo)
                     .ToListAsync()
             );
             //return _mapper.Map<IEnumerable<FornecedorViewModel>>(await _fornecedorRepository.ObterTodos());
