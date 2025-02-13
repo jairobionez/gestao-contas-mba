@@ -47,16 +47,19 @@ namespace GestaoContas.Api.V1.Controllers
         public async Task<IEnumerable<TransacaoViewModel>> Get()
         {
             //return _listMock;
-            return _mapper.Map<IEnumerable<TransacaoViewModel>>(await _context.Transacoes.ToListAsync());
+            return _mapper.Map<IEnumerable<TransacaoViewModel>>(await _context.Transacoes.Include(x => x.Categoria).ToListAsync());
         }
 
         [HttpGet("filtro")]
-        public async Task<IEnumerable<TransacaoViewModel>> Get(DateTime? data, Guid? categoriaId, GestaoContas.Shared.Domain.TipoTransacao? tipo)
+        public async Task<IEnumerable<TransacaoViewModel>> Get(DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId, GestaoContas.Shared.Domain.TipoTransacao? tipo)
         {
-            var query = _context.Transacoes.AsQueryable();
+            var query = _context.Transacoes.Include(x => x.Categoria).AsQueryable();
 
-            if (data.HasValue)
-                query = query.Where(t => t.Data.HasValue && t.Data.Value.Date == data.Value.Date);
+            if (dataInicial.HasValue)
+                query = query.Where(t => t.Data.HasValue && t.Data.Value.Date >= dataInicial.Value.Date);
+
+            if (dataFinal.HasValue)
+                query = query.Where(t => t.Data.HasValue && t.Data.Value.Date <= dataFinal.Value.Date);
 
             if (categoriaId.HasValue)
                 query = query.Where(t => t.CategoriaId == categoriaId.Value);
@@ -70,7 +73,7 @@ namespace GestaoContas.Api.V1.Controllers
 
         
         [HttpPost("busca")]
-        public async Task<IEnumerable<TransacaoViewModel>> Get(FiltroTransacaoViewModel busca)
+        public async Task<IEnumerable<TransacaoViewModel>> Post(FiltroTransacaoViewModel busca)
         {
             var query = _context.Transacoes.AsQueryable();
             if (busca.DataInicial.HasValue)
@@ -115,13 +118,20 @@ namespace GestaoContas.Api.V1.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary), StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<TransacaoViewModel>> Adicionar(TransacaoViewModel transacaoViewModel)
+        public async Task<ActionResult<TransacaoViewModel>> Adicionar(TransacaoCriarViewModel transacaoViewModel)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var novaTransacao = _mapper.Map<Transacao>(transacaoViewModel);
-            novaTransacao.Id = Guid.NewGuid(); 
+            var novaTransacao = new Transacao
+            {
+                CategoriaId = transacaoViewModel.CategoriaId,
+                Data = transacaoViewModel.Data,
+                Descricao = transacaoViewModel.Descricao,
+                TipoTransacao = (TipoTransacao)transacaoViewModel.Tipo,
+                Valor = transacaoViewModel.Valor,
+                UsuarioId = Guid.Parse("0709bb68-830b-464b-b642-ea16012e2f2f")
+            }; //_mapper.Map<Transacao>(transacaoViewModel);
 
             _context.Transacoes.Add(novaTransacao);
             await _context.SaveChangesAsync();
@@ -136,7 +146,7 @@ namespace GestaoContas.Api.V1.Controllers
         [ProducesResponseType(typeof(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<TransacaoViewModel>> Atualizar(Guid id, TransacaoViewModel transacaoViewModel)
+        public async Task<ActionResult<TransacaoViewModel>> Atualizar(Guid id, TransacaoEditarViewModel transacaoViewModel)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -146,7 +156,12 @@ namespace GestaoContas.Api.V1.Controllers
             if (transacaoExistente == null)
                 return NotFound("Transação não encontrada.");
 
-            _mapper.Map(transacaoViewModel, transacaoExistente);
+            transacaoExistente.CategoriaId = transacaoViewModel.CategoriaId;
+            transacaoExistente.Valor = transacaoViewModel.Valor;
+            transacaoExistente.Data = transacaoViewModel.Data;  
+            transacaoExistente.TipoTransacao = transacaoViewModel.TipoTransacao;
+            transacaoExistente.Descricao = transacaoViewModel.Descricao ?? string.Empty;
+            //_mapper.Map(transacaoViewModel, transacaoExistente);
 
             _context.Transacoes.Update(transacaoExistente);
             await _context.SaveChangesAsync();

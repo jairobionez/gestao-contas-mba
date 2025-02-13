@@ -1,4 +1,5 @@
-﻿using GestaoContas.Shared.Domain;
+﻿using GestaoContas.Api.V1.ViewModels.Categorias;
+using GestaoContas.Shared.Domain;
 
 namespace GestaoContas.Api.V1.ViewModels.Transacao
 {
@@ -12,6 +13,6 @@ namespace GestaoContas.Api.V1.ViewModels.Transacao
         public Guid CategoriaId { get; set; }
         public Guid UsuarioId { get; set; }
         public Usuario Usuario { get; set; }
-        public Categoria Categoria { get; set; }
+        public CategoriaViewModel Categoria { get; set; }
     }
 }

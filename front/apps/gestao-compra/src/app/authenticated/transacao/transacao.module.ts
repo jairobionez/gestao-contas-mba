@@ -14,6 +14,8 @@ import { MatSelectModule } from "@angular/material/select";
 import { CreateEditTransacaoComponent } from "./create-edit-transacao/create-edit-transacao.component";
 import { MatNativeDateModule } from "@angular/material/core";
 import { CategoriaService, TransacaoService } from "@front/services";
+import { CommonModule, DatePipe, DecimalPipe } from "@angular/common";
+import { MatDatepickerModule } from "@angular/material/datepicker";
 
 @NgModule({
   imports: [TransacaoRouting,
@@ -26,7 +28,11 @@ import { CategoriaService, TransacaoService } from "@front/services";
     MatDialogModule,
     MatSnackBarModule,
     MatSelectModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatDatepickerModule,
+    DecimalPipe,
+    DatePipe,
+    CommonModule
   ],
   exports: [],
   declarations: [TransacaoComponent, ListaTransacaoComponent, CreateEditTransacaoComponent],
