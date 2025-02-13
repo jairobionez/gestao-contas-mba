@@ -49,7 +49,7 @@ namespace GestaoContas.Api.V1.Controllers
         }
 
         [HttpGet("filtro")]
-        public async Task<IEnumerable<TransacaoViewModel>> Get(DateTime? data, Guid? categoriaId, TipoTransacao? tipo)
+        public async Task<IEnumerable<TransacaoViewModel>> Get(DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId, TipoTransacao? tipo)
         {
             var query = _context.Transacoes.Include(x => x.Categoria).AsQueryable();
 
@@ -121,15 +121,7 @@ namespace GestaoContas.Api.V1.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var novaTransacao = new Transacao
-            {
-                CategoriaId = transacaoViewModel.CategoriaId,
-                Data = transacaoViewModel.Data,
-                Descricao = transacaoViewModel.Descricao,
-                TipoTransacao = (TipoTransacao)transacaoViewModel.Tipo,
-                Valor = transacaoViewModel.Valor,
-                UsuarioId = Guid.Parse("0709bb68-830b-464b-b642-ea16012e2f2f")
-            }; //_mapper.Map<Transacao>(transacaoViewModel);
+            var novaTransacao = new Transacao(transacaoViewModel.Tipo, transacaoViewModel.Valor, transacaoViewModel.Data, transacaoViewModel.Descricao, transacaoViewModel.CategoriaId, AppUser.GetId()); //_mapper.Map<Transacao>(transacaoViewModel);
 
             _context.Transacoes.Add(novaTransacao);
             await _context.SaveChangesAsync();
@@ -154,14 +146,12 @@ namespace GestaoContas.Api.V1.Controllers
             if (transacaoExistente == null)
                 return NotFound("Transação não encontrada.");
 
-            transacaoExistente.CategoriaId = transacaoViewModel.CategoriaId;
-            transacaoExistente.Valor = transacaoViewModel.Valor;
-            transacaoExistente.Data = transacaoViewModel.Data;  
-            transacaoExistente.TipoTransacao = transacaoViewModel.TipoTransacao;
-            transacaoExistente.Descricao = transacaoViewModel.Descricao ?? string.Empty;
+
+            var transacao = new Transacao(transacaoViewModel.Id, transacaoViewModel.TipoTransacao, transacaoViewModel.Valor, transacaoViewModel.Data, transacaoViewModel.Descricao, transacaoViewModel.CategoriaId, AppUser.GetId());
+
             //_mapper.Map(transacaoViewModel, transacaoExistente);
 
-            _context.Transacoes.Update(transacaoExistente);
+            _context.Transacoes.Update(transacao);
             await _context.SaveChangesAsync();
 
             return Ok(_mapper.Map<TransacaoViewModel>(transacaoExistente));
