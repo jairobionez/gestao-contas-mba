@@ -7,6 +7,6 @@ export interface TransacaoResponseModel {
     tipo: any;
     categoria: CategoriaResponseModel,
     valor: number,
-    data: any;
+    data: Date;
     descricao: string;
   }
