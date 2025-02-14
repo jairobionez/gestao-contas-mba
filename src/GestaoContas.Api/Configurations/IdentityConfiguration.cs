@@ -1,6 +1,6 @@
-﻿using GestaoContas.Shared.Data.Contexts;
-using GestaoContas.Shared.Domain;
-using Microsoft.AspNetCore.Authentication;
+﻿using GestaoContas.Api.Extensions.Identity;
+using GestaoContas.Api.Extensions.Jwts;
+using GestaoContas.Data.Contexts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -12,9 +12,21 @@ namespace GestaoContas.Api.Configurations
     {
         public static WebApplicationBuilder AddIdentityConfiguration(this WebApplicationBuilder builder)
         {
-            builder.Services.AddIdentity<IdentityUser<Guid>, IdentityRole<Guid>>()
-                           .AddRoles<IdentityRole<Guid>>()
-                           .AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.Services
+                .AddIdentity<IdentityUser<Guid>, IdentityRole<Guid>>(options =>
+                {
+                    options.Password.RequireDigit = true;
+                    options.Password.RequireLowercase = true;
+                    options.Password.RequireUppercase = true;
+                    options.Password.RequireNonAlphanumeric = true;
+                    options.Password.RequiredLength = 8;
+                    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ ";
+                    options.SignIn.RequireConfirmedAccount = false;
+                })
+                .AddRoles<IdentityRole<Guid>>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddErrorDescriber<MensagensIdentityPortugues>();
+
 
             var jwtSettingsSection = builder.Configuration.GetSection("JwtSettings");
             builder.Services.Configure<JwtSettings>(jwtSettingsSection);
@@ -22,17 +34,19 @@ namespace GestaoContas.Api.Configurations
             var jwtSettings = jwtSettingsSection.Get<JwtSettings>();
             var key = Encoding.ASCII.GetBytes(jwtSettings?.Segredo!);
 
-            builder.Services.AddAuthentication(options =>
-            {
+            builder.Services.
+                AddAuthentication(options =>
+                {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
+                })
                 .AddJwtBearer(options =>
                 {
                     options.RequireHttpsMetadata = true;
                     options.SaveToken = true;
                     options.TokenValidationParameters = new TokenValidationParameters()
                     {
+                        ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(key),
                         ValidateIssuer = true,
                         ValidateAudience = true,

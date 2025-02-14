@@ -1,6 +1,5 @@
-﻿using GestaoContas.Shared.Data.Contexts;
-using GestaoContas.Shared.Domain;
-using GestaoContas.Shared.Extensions;
+﻿using GestaoContas.Business.Models;
+using GestaoContas.Data.Contexts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -69,19 +68,15 @@ namespace GestaoContas.Api.Helpers
 
                 await userManager.CreateAsync(adminUser);
                 await userManager.AddToRoleAsync(adminUser, "Admin");
-                await userManager.AddClaimsAsync(adminUser, 
-                    new List<Claim>() { 
-                        new Claim(ClaimName.Categoria, $"{ClaimValue.Cadastrar},{ClaimValue.Editar},{ClaimValue.Excluir}", ClaimValueTypes.String), 
-                        new Claim(ClaimName.Orcamento, $"{ClaimValue.Cadastrar},{ClaimValue.Editar},{ClaimValue.Excluir}", ClaimValueTypes.String), 
-                        new Claim(ClaimName.Transacao, $"{ClaimValue.Cadastrar},{ClaimValue.Editar},{ClaimValue.Excluir}", ClaimValueTypes.String) 
+                await userManager.AddClaimsAsync(adminUser,
+                    new List<Claim>() {
+                        new Claim(ClaimName.Categoria, $"{ClaimValue.Cadastrar},{ClaimValue.Editar},{ClaimValue.Excluir}", ClaimValueTypes.String),
+                        new Claim(ClaimName.Orcamento, $"{ClaimValue.Cadastrar},{ClaimValue.Editar},{ClaimValue.Excluir}", ClaimValueTypes.String),
+                        new Claim(ClaimName.Transacao, $"{ClaimValue.Cadastrar},{ClaimValue.Editar},{ClaimValue.Excluir}", ClaimValueTypes.String)
                     });
             }
 
-            await context.Usuarios.AddAsync(new Usuario
-            {
-                Id = adminId,
-                Nome = "Admin User",
-            });
+            await context.Usuarios.AddAsync(new Usuario(adminId, "Admin User", "admin@teste.com"));
 
             var userId = Guid.NewGuid();
             if (!context.Users.Any(u => u.UserName == "teste@teste.com"))
@@ -98,14 +93,10 @@ namespace GestaoContas.Api.Helpers
                 };
                 normalUser.PasswordHash = userManager.PasswordHasher.HashPassword(normalUser, "Teste@123");
 
-                await userManager.CreateAsync(normalUser);                
+                await userManager.CreateAsync(normalUser);
             }
 
-            await context.Usuarios.AddAsync(new Usuario
-            {
-                Id = userId,
-                Nome = "Teste User",
-            });
+            await context.Usuarios.AddAsync(new Usuario(userId, "Teste User", "teste@teste.com"));
             await context.SaveChangesAsync();
 
             // Seed Categories
@@ -117,32 +108,10 @@ namespace GestaoContas.Api.Helpers
             {
                 await context.Categorias.AddRangeAsync(new List<Categoria>
                 {
-                    new Categoria
-                    {
-                        Id = categoriaOneId,
-                        Nome = "Alimentação",
-                        Descricao = "Categoria de Alimentação",
-                        Padrao = true,
-                        Ativo = true
-                    },
-                    new Categoria
-                    {
-                        Id = categoriaTwoId,
-                        Nome = "Transporte",
-                        Descricao = "Categoria de Transporte",
-                        Padrao = true,
-                        Ativo = true
-                    },
-                    new Categoria
-                    {
-                        Id = categoriaThreeId,
-                        Nome = "Salario",
-                        Descricao = "Salario Mensal",
-                        Padrao = true,
-                        Ativo = true
-                    }
+                    new Categoria(categoriaOneId,"Alimentação","Categoria de Alimentação",true,true),
+                    new Categoria(categoriaTwoId,"Transporte","Categoria de Transporte",true,true),
+                    new Categoria(categoriaThreeId,"Salario","Salario Mensal",true,true)
                 });
-
                 await context.SaveChangesAsync();
             }
 
@@ -151,86 +120,28 @@ namespace GestaoContas.Api.Helpers
             {
                 await context.Transacoes.AddRangeAsync(new List<Transacao>
                 {
-                    new Transacao
-                    {
-                        Id = Guid.NewGuid(),
-                        Data = DateTime.UtcNow.AddDays(-5),
-                        Valor = 20000.00M,
-                        Descricao = "Salário Admin",
-                        TipoTransacao = TipoTransacao.Entrada,
-                        CategoriaId = categoriaOneId,
-                        UsuarioId = adminId
-                    },
-                    new Transacao
-                    {
-                        Id = Guid.NewGuid(),
-                        Data = DateTime.UtcNow.AddDays(-5),
-                        Valor = 150.75M,
-                        Descricao = "Compra no supermercado",
-                        TipoTransacao = TipoTransacao.Saida,
-                        CategoriaId = categoriaOneId,
-                        UsuarioId = adminId
-                    },
-                    new Transacao
-                    {
-                        Id = Guid.NewGuid(),
-                        Data = DateTime.UtcNow.AddDays(-2),
-                        Valor = 10000.00M,
-                        Descricao = "Salario Teste",
-                        TipoTransacao = TipoTransacao.Entrada,
-                        CategoriaId = categoriaTwoId,
-                        UsuarioId = userId
-                    },
-                    new Transacao
-                    {
-                        Id = Guid.NewGuid(),
-                        Data = DateTime.UtcNow.AddDays(-2),
-                        Valor = 50.25M,
-                        Descricao = "Passagem de ônibus",
-                        TipoTransacao = TipoTransacao.Saida,
-                        CategoriaId = categoriaTwoId,
-                        UsuarioId = userId
-                    }
+                    new Transacao(TipoTransacao.Entrada,20000.00M,DateTime.UtcNow.AddDays(-5),"Salário Admin",categoriaOneId,adminId),
+                    new Transacao(TipoTransacao.Saida,150.75M,DateTime.UtcNow.AddDays(-5),"Compra no supermercado",categoriaOneId,adminId),
+                    new Transacao(TipoTransacao.Entrada,50.25M,DateTime.UtcNow.AddDays(-2),"Salario Teste",categoriaTwoId,userId),
+                    new Transacao(TipoTransacao.Saida,10000.00M,DateTime.UtcNow.AddDays(-2),"Passagem de ônibus",categoriaTwoId,userId)
                 });
 
                 await context.SaveChangesAsync();
 
                 if (!context.Orcamentos.Any())
+                {
+                    await context.Orcamentos.AddRangeAsync(new List<Orcamento>
                     {
-                        await context.Orcamentos.AddRangeAsync(new List<Orcamento>
-                    {
-                        new Orcamento
-                        {
-                            Id = Guid.NewGuid(),
-                            Mes = 1,
-                            Ano = 2025,
-                            Limite = 1000M,
-                            CategoriaId = categoriaOneId,
-                            UsuarioId = adminId
-                        },
-                        new Orcamento
-                        {
-                            Id = Guid.NewGuid(),
-                            Mes = 2,
-                            Ano = 2025,
-                            Limite = 150M,
-                            CategoriaId = categoriaTwoId,
-                            UsuarioId = adminId
-                        },
-                        new Orcamento
-                        {
-                            Id = Guid.NewGuid(),
-                            Mes = 3,
-                            Ano = 2025,
-                            Limite = 500M,
-                            CategoriaId = categoriaOneId,
-                            UsuarioId = userId
-                        }
+                        new Orcamento(1,2025,1000M,categoriaOneId,adminId),
+                        new Orcamento(2,2025,150M,categoriaTwoId,adminId),
+                        new Orcamento(3,2025,500M,categoriaOneId,userId)
+
                     });
-                    await context.SaveChangesAsync();
                 }
+                await context.SaveChangesAsync();
             }
         }
     }
 }
+
 

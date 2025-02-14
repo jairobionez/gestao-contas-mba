@@ -1,4 +1,4 @@
-﻿using GestaoContas.Shared.Domain;
+﻿using GestaoContas.Business.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace GestaoContas.Api.V1.ViewModels.Transacao
