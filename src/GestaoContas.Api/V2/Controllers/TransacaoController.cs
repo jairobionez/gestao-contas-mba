@@ -1,12 +1,14 @@
 ﻿using Asp.Versioning;
 using AutoMapper;
 using GestaoContas.Api.Controllers;
-using GestaoContas.Api.V2.ViewModels.Categorias;
 using GestaoContas.Api.V2.ViewModels.Transacoes;
 using GestaoContas.Business.Interfaces;
 using GestaoContas.Business.Models;
-using GestaoContas.Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+using System.Linq;
+using GestaoContas.Api.Extensions.Expressions;
 
 namespace GestaoContas.Api.V2.Controllers
 {
@@ -85,6 +87,29 @@ namespace GestaoContas.Api.V2.Controllers
                 return CustomResponse();
 
             return NoContent();
+        }
+
+        [HttpGet("Busca")]
+        public async Task<IEnumerable<TransacaoViewModel>> Get([FromQuery]TransacaoFiltroViewModel busca)
+        {
+            Expression<Func<Transacao, bool>> predicate = e => true;
+
+            predicate = predicate.And(t => t.UsuarioId.Equals(AppUser.GetId()));
+
+            if (busca.DataInicial.HasValue)
+                predicate = predicate.And(t => t.Data.HasValue && t.Data.Value.Date >= busca.DataInicial.Value.Date);
+            if (busca.DataFinal.HasValue)
+                predicate = predicate.And(t => t.Data.HasValue && t.Data.Value.Date <= busca.DataFinal.Value.Date);
+            if (busca.ValorInicial.HasValue)
+                predicate = predicate.And(t => t.Valor >= busca.ValorInicial.Value);
+            if (busca.ValorFinal.HasValue)
+                predicate = predicate.And(t => t.Valor <= busca.ValorFinal.Value);
+            if (busca.CategoriaId.HasValue)
+                predicate = predicate.And(t => t.CategoriaId == busca.CategoriaId.Value);
+            if (busca.Tipo.HasValue)
+                predicate = predicate.And(t => t.TipoTransacao == (TipoTransacao)busca.Tipo.Value);
+
+            return _mapper.Map<IEnumerable<TransacaoViewModel>>(await _repositorio.Buscar(predicate));
         }
     }
 }
