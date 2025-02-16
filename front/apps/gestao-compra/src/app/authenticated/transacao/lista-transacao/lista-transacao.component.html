@@ -1,96 +1,93 @@
-<div>
-    <div class="col-12">
-      <div class="row" [formGroup]="form">
-          <div class="col-md-3 col-12">
-            <mat-form-field class="example-full-width" appearance="outline">
-              <mat-label>Tipos</mat-label>
-              <mat-select formControlName="tipo">
-                <mat-option>Todas</mat-option>
-                <mat-option [value]="0">Entrada</mat-option>
-                <mat-option [value]="1">Saída</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <div class="col-md-3 col-12">
-            <mat-form-field class="example-full-width" appearance="outline">
-              <mat-label>Categorias</mat-label>
-              <mat-select formControlName="categoriaId">
-                <mat-option>Todas</mat-option>
-              @for (categoria of categorias; track categoria) {
-              <mat-option [value]="categoria.id">{{categoria.nome}}</mat-option>
-              }
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <div class="col-md-3 col-12">
-            <mat-form-field class="example-full-width" appearance="outline">
-              <mat-label>Data Inicial - Final</mat-label>
-              <mat-date-range-input [rangePicker]="picker">
-                <input matStartDate formControlName="dataInicial" placeholder="Data Inicial">
-                <input matEndDate formControlName="dataFinal" placeholder="Data Final">
-              </mat-date-range-input>              
-              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-              <mat-date-range-picker #picker></mat-date-range-picker>
-            </mat-form-field>
-          </div>
-          <div class="col-md-2 col-12">
-            <button class="width-10" mat-flat-button (click)="buscar()">Filtrar</button>
-          </div>
-          <div class="col-md-2 col-12">
-            <button class="width-10" mat-flat-button (click)="novaTransacao()">Nova Transação</button>
-          </div>
-      </div>
-    </div>
+<div class="filter-content" [formGroup]="form">
+  <div class="d-flex align-items-center">
+    <mat-form-field class="example-full-width me-2" appearance="outline">
+      <mat-label>Tipos</mat-label>
+      <mat-select formControlName="tipo">
+        <mat-option>Todas</mat-option>
+        <mat-option [value]="0">Entrada</mat-option>
+        <mat-option [value]="1">Saída</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width me-2" appearance="outline">
+      <mat-label>Categorias</mat-label>
+      <mat-select formControlName="categoriaId">
+        <mat-option>Todas</mat-option>
+        @for (categoria of categorias; track categoria) {
+        <mat-option [value]="categoria.id">{{categoria.nome}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width me-2" appearance="outline">
+      <mat-label>Data Inicial - Final</mat-label>
+      <mat-date-range-input [rangePicker]="picker">
+        <input matStartDate formControlName="dataInicial" placeholder="Data Inicial">
+        <input matEndDate formControlName="dataFinal" placeholder="Data Final">
+      </mat-date-range-input>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+  </div>
+
+  <div class="d-flex justify-content-end">
+    <button class="width-10 me-2" mat-flat-button (click)="exportarTransacoes()">Exportar</button>
+
+    <button class="width-10 me-2" mat-flat-button (click)="buscar()">Filtrar</button>
+
+    <button class="width-10" mat-flat-button (click)="novaTransacao()">Nova Transação</button>
+  </div>
 </div>
 
 <div class="table-content">
-<mat-table mat-table [dataSource]="transacoes">
-  <ng-container matColumnDef="tipo">
-    <mat-header-cell *matHeaderCellDef> Tipo </mat-header-cell>
-    <mat-cell *matCellDef="let element" data-label="Tipo"> 
+  <mat-table mat-table [dataSource]="transacoes">
+    <ng-container matColumnDef="tipo">
+      <mat-header-cell *matHeaderCellDef> Tipo </mat-header-cell>
+      <mat-cell *matCellDef="let element" data-label="Tipo">
         @if (element.tipoTransacao == 0) {
-            <p>Entrada</p>
-            }@else {
-            <p>Saída</p>
-            } 
-    </mat-cell>
-  </ng-container>
+        <p>Entrada</p>
+        }@else {
+        <p>Saída</p>
+        }
+      </mat-cell>
+    </ng-container>
 
-  <ng-container matColumnDef="categoria">
-    <mat-header-cell *matHeaderCellDef> Categoria </mat-header-cell>
-    <mat-cell *matCellDef="let element" data-label="Categoria"> {{element.categoria?.nome}} </mat-cell>
-  </ng-container>
+    <ng-container matColumnDef="categoria">
+      <mat-header-cell *matHeaderCellDef> Categoria </mat-header-cell>
+      <mat-cell *matCellDef="let element" data-label="Categoria"> {{element.categoria?.nome}} </mat-cell>
+    </ng-container>
 
-  <ng-container matColumnDef="valor">
-    <mat-header-cell *matHeaderCellDef> Valor </mat-header-cell>
-    <mat-cell *matCellDef="let element" data-label="Valor"> {{element.valor | number: '1.2-2'}} </mat-cell>
-  </ng-container>
+    <ng-container matColumnDef="valor">
+      <mat-header-cell *matHeaderCellDef> Valor </mat-header-cell>
+      <mat-cell *matCellDef="let element" data-label="Valor"> {{element.valor | number: '1.2-2'}} </mat-cell>
+    </ng-container>
 
-  <ng-container matColumnDef="data">
-    <mat-header-cell *matHeaderCellDef> Data </mat-header-cell>
-    <mat-cell *matCellDef="let element" data-label="Data"> {{element.data | date: 'dd/MM/yyyy' }} </mat-cell>
-  </ng-container>
+    <ng-container matColumnDef="data">
+      <mat-header-cell *matHeaderCellDef> Data </mat-header-cell>
+      <mat-cell *matCellDef="let element" data-label="Data"> {{element.data | date: 'dd/MM/yyyy' }} </mat-cell>
+    </ng-container>
 
-  <ng-container matColumnDef="descricao">
-    <mat-header-cell *matHeaderCellDef> Descrição </mat-header-cell>
-    <mat-cell *matCellDef="let element" data-label="Descrição"> {{element.descricao}} </mat-cell>
-  </ng-container>
+    <ng-container matColumnDef="descricao">
+      <mat-header-cell *matHeaderCellDef> Descrição </mat-header-cell>
+      <mat-cell *matCellDef="let element" data-label="Descrição"> {{element.descricao}} </mat-cell>
+    </ng-container>
 
-  <ng-container matColumnDef="acoes">
-    <mat-header-cell *matHeaderCellDef> Ações </mat-header-cell>
-    <mat-cell *matCellDef="let element" data-label="Ações">
-      <span class="material-symbols-outlined cursor-pointer" (click)="editarTransacao(element)">
-        edit
-      </span>
+    <ng-container matColumnDef="acoes">
+      <mat-header-cell *matHeaderCellDef> Ações </mat-header-cell>
+      <mat-cell *matCellDef="let element" data-label="Ações">
+        <span class="material-symbols-outlined cursor-pointer" (click)="editarTransacao(element)">
+          edit
+        </span>
 
-      <span class="material-symbols-outlined cor-vermelho ms-2 cursor-pointer" (click)="removerTransacao(element.id)">
-        delete
-      </span>
-    </mat-cell>
-  </ng-container>
+        <span class="material-symbols-outlined cor-vermelho ms-2 cursor-pointer" (click)="removerTransacao(element.id)">
+          delete
+        </span>
+      </mat-cell>
+    </ng-container>
 
 
-  <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumns;" [class.row-entrada]="row.tipoTransacao == 0" [class.row-saida]="row.tipoTransacao == 1"></mat-row>
-</mat-table>
+    <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;" [class.row-entrada]="row.tipoTransacao == 0"
+      [class.row-saida]="row.tipoTransacao == 1"></mat-row>
+  </mat-table>
 </div>
