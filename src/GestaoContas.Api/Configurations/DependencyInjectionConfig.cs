@@ -18,10 +18,12 @@ namespace GestaoContas.Api.Configurations
             builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             builder.Services.AddScoped<ICategoriaReposotory, CategoriaRepository>();
             builder.Services.AddScoped<ITransacaoRepository, TransacaoRepsitory>();
+            builder.Services.AddScoped<IOrcamentoRepository, OrcamentoRepository>();
 
             builder.Services.AddScoped<IUsuarioService, UsusarioService>();
             builder.Services.AddScoped<ICategoriaService, CategoriaService>();
             builder.Services.AddScoped<ITransacaoService, TransacaoService>();
+            builder.Services.AddScoped<IOrcamentoService, OrcamentoService>();
 
 
             builder.Services.AddScoped<INotificador, Notificador>();
