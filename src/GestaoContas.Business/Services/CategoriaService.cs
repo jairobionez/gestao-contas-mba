@@ -1,5 +1,6 @@
 ﻿using GestaoContas.Business.Interfaces;
 using GestaoContas.Business.Models;
+using GestaoContas.Business.Models.DTOs;
 using GestaoContas.Business.Models.Validations;
 
 namespace GestaoContas.Business.Services

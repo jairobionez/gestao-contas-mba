@@ -1,5 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { DashboardFiltroFormGroup } from '@front/forms';
+import { DashboardService } from '@front/services';
 import { EChartsOption } from 'echarts';
+import { take } from 'rxjs';
 
 @Component({
     selector: 'app-dashboard',
@@ -12,11 +15,47 @@ export class DashboardComponent implements OnInit {
 
     options!: EChartsOption;
 
-    constructor(private cd: ChangeDetectorRef)
-    {}
+    form: DashboardFiltroFormGroup = new DashboardFiltroFormGroup();
+
+    totalEntradas = 0;
+    totalSaidas = 0;
+    saldoTotal = 0;
+    mediaGastosDiarios = 0;
+
+    constructor(private cd: ChangeDetectorRef, private dashService: DashboardService)
+    {
+      const now = new Date();
+      const primeiroDia = new Date(now.getFullYear(), now.getMonth(), 1);
+      const ultimoDia = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+      this.form.dataInicial.setValue(primeiroDia);
+      this.form.dataFinal.setValue(ultimoDia);
+    }
 
     ngOnInit() {
-        this.buildDashboardOption(["Alimentação", "Transporte"], [1000, 400]);
+      this.getIndicadores();
+      // this.buildDashboardOption(["Alimentação", "Transporte"], [1000, 400]);
+    }
+
+    getIndicadores(){
+      this.dashService.indicadores(this.form.value)
+      .pipe(take(1))
+      .subscribe({
+        next: (res) => {
+          this.totalEntradas = res.data.totalEntradas;
+          this.totalSaidas = res.data.totalSaidas;
+          this.mediaGastosDiarios = res.data.mediaGastosDiarios;
+          this.saldoTotal = this.totalEntradas - this.totalSaidas;
+
+          const valores = res.data.categoriasGasto.map((x: any) => x.totalGasto).reverse();
+          const nomes = res.data.categoriasGasto.map((x: any) => x.nomeCategoria).reverse();
+
+          this.buildDashboardOption(nomes, valores);
+        },
+        error: (err) => {
+
+        }
+      });
     }
 
     buildDashboardOption(categoria: string[], valores: number[]) {
