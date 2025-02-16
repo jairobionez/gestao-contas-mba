@@ -14,11 +14,11 @@ namespace GestaoContas.Api.V2.Controllers
 {
     [ApiVersion("2.0")]
     [Route("api/v{version:apiVersion}/[Controller]")]
-    public class TransacaoController : MainController
+    public class TransacoesController : MainController
     {
         private readonly ITransacaoRepository _repositorio;
         private readonly ITransacaoService _servico;
-        public TransacaoController(
+        public TransacoesController(
             INotificador notificador, 
             IMapper mapper, 
             IUser appUser, 
@@ -33,13 +33,13 @@ namespace GestaoContas.Api.V2.Controllers
         [HttpGet]
         public async Task<IEnumerable<TransacaoViewModel>> Get()
         {
-            return _mapper.Map<IEnumerable<TransacaoViewModel>>(await _repositorio.Buscar(c => c.UsuarioId == AppUser.GetId()));
+            return _mapper.Map<IEnumerable<TransacaoViewModel>>(await _repositorio.BuscarCompleto(c => c.UsuarioId == AppUser.GetId()));
         }
 
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<TransacaoViewModel>> Get(Guid id)
         {
-            var transacao = await _repositorio.ObterPorId(id);
+            var transacao = await _repositorio.ObterCompletoPorId(id);
 
             if (transacao != null && transacao.UsuarioId != AppUser.GetId())
             {
@@ -92,7 +92,7 @@ namespace GestaoContas.Api.V2.Controllers
         [HttpGet("Busca")]
         public async Task<IEnumerable<TransacaoViewModel>> Get([FromQuery]TransacaoFiltroViewModel busca)
         {
-            var e = await _repositorio.Buscar(
+            var e = await _repositorio.BuscarCompleto(
                 t=>
                 t.UsuarioId.Equals(AppUser.GetId())
                 && (!busca.Tipo.HasValue || (busca.Tipo.HasValue && t.TipoTransacao.Equals((TipoTransacao)busca.Tipo.Value)))

@@ -1,4 +1,5 @@
-﻿using GestaoContas.Business.Models;
+﻿using GestaoContas.Api.V2.ViewModels.Categorias;
+using GestaoContas.Business.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace GestaoContas.Api.V2.ViewModels.Transacoes
@@ -13,5 +14,7 @@ namespace GestaoContas.Api.V2.ViewModels.Transacoes
         public string? Descricao { get; set; }
         public Guid CategoriaId { get; set; }
         public Guid UsuarioId { get; set; }
+
+        public CategoriaViewModel? Categoria { get; set; }
     }
 }
