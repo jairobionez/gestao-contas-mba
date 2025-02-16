@@ -36,7 +36,7 @@ namespace GestaoContas.Api.V2.Controllers
             return _mapper.Map<IEnumerable<TransacaoViewModel>>(await _repositorio.Buscar(c => c.UsuarioId == AppUser.GetId()));
         }
 
-        [HttpGet("id:guid")]
+        [HttpGet("{id:guid}")]
         public async Task<ActionResult<TransacaoViewModel>> Get(Guid id)
         {
             var transacao = await _repositorio.ObterPorId(id);
@@ -61,7 +61,7 @@ namespace GestaoContas.Api.V2.Controllers
 
             return CustomResponse(model);
         }
-        [HttpPut("id:guid")]
+        [HttpPut("{id:guid}")]
         public async Task<ActionResult<TransacaoAtualizarViewModel>> Put(Guid id, TransacaoAtualizarViewModel model)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
@@ -79,7 +79,7 @@ namespace GestaoContas.Api.V2.Controllers
         }
 
 
-        [HttpDelete("id:guid")]
+        [HttpDelete("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> Delete(Guid id)
         {

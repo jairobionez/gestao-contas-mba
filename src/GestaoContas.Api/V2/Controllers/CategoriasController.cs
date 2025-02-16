@@ -35,7 +35,7 @@ namespace GestaoContas.Api.V2.Controllers
         }
 
         
-        [HttpGet("id:guid")]        
+        [HttpGet("{id:guid}")]        
         public async Task<ActionResult<CategoriaViewModel>> Get(Guid id)
         {
             var categoria = await _repository.ObterPorId(id);
@@ -62,7 +62,7 @@ namespace GestaoContas.Api.V2.Controllers
         }
 
         
-        [HttpPut("id:guid")]        
+        [HttpPut("{id:guid}")]        
         public async Task<ActionResult<CategoriaAtualizarViewModel>> Put(Guid id, CategoriaAtualizarViewModel model)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
@@ -80,7 +80,7 @@ namespace GestaoContas.Api.V2.Controllers
         }
 
         
-        [HttpDelete("id:guid")]        
+        [HttpDelete("{id:guid}")]        
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> Delete(Guid id)
         {            
