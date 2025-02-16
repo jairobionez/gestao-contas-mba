@@ -92,24 +92,19 @@ namespace GestaoContas.Api.V2.Controllers
         [HttpGet("Busca")]
         public async Task<IEnumerable<TransacaoViewModel>> Get([FromQuery]TransacaoFiltroViewModel busca)
         {
-            Expression<Func<Transacao, bool>> predicate = e => true;
+            var e = await _repositorio.Buscar(
+                t=>
+                t.UsuarioId.Equals(AppUser.GetId())
+                && (!busca.Tipo.HasValue || (busca.Tipo.HasValue && t.TipoTransacao.Equals((TipoTransacao)busca.Tipo.Value)))
+                &&(!busca.DataInicial.HasValue || (busca.DataInicial.HasValue && t.Data.HasValue && t.Data.Value.Date >= busca.DataInicial.Value.Date))
+                &&(!busca.DataFinal.HasValue || (busca.DataFinal.HasValue && t.Data.HasValue && t.Data.Value.Date <= busca.DataFinal.Value.Date))
+                && (!busca.ValorInicial.HasValue || (busca.ValorInicial.HasValue && t.Valor >= busca.ValorInicial.Value))
+                &&(!busca.ValorFinal.HasValue || (busca.ValorFinal.HasValue && t.Valor <= busca.ValorFinal.Value))
+                &&(!busca.CategoriaId.HasValue || (busca.CategoriaId.HasValue && t.CategoriaId.Equals(busca.CategoriaId.Value)))
+                &&(!busca.Tipo.HasValue ||(busca.Tipo.HasValue && t.TipoTransacao.Equals((TipoTransacao)busca.Tipo.Value)))
+                );
 
-            predicate = predicate.And(t => t.UsuarioId.Equals(AppUser.GetId()));
-
-            if (busca.DataInicial.HasValue)
-                predicate = predicate.And(t => t.Data.HasValue && t.Data.Value.Date >= busca.DataInicial.Value.Date);
-            if (busca.DataFinal.HasValue)
-                predicate = predicate.And(t => t.Data.HasValue && t.Data.Value.Date <= busca.DataFinal.Value.Date);
-            if (busca.ValorInicial.HasValue)
-                predicate = predicate.And(t => t.Valor >= busca.ValorInicial.Value);
-            if (busca.ValorFinal.HasValue)
-                predicate = predicate.And(t => t.Valor <= busca.ValorFinal.Value);
-            if (busca.CategoriaId.HasValue)
-                predicate = predicate.And(t => t.CategoriaId == busca.CategoriaId.Value);
-            if (busca.Tipo.HasValue)
-                predicate = predicate.And(t => t.TipoTransacao == (TipoTransacao)busca.Tipo.Value);
-
-            return _mapper.Map<IEnumerable<TransacaoViewModel>>(await _repositorio.Buscar(predicate));
+            return _mapper.Map<IEnumerable<TransacaoViewModel>>(e);
         }
     }
 }
