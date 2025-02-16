@@ -14,11 +14,11 @@ namespace GestaoContas.Api.V2.Controllers
 {
     [ApiVersion("2.0")]
     [Route("api/v{version:apiVersion}/[Controller]")]
-    public class TransacaoController : MainController
+    public class TransacoesController : MainController
     {
         private readonly ITransacaoRepository _repositorio;
         private readonly ITransacaoService _servico;
-        public TransacaoController(
+        public TransacoesController(
             INotificador notificador, 
             IMapper mapper, 
             IUser appUser, 
@@ -33,13 +33,13 @@ namespace GestaoContas.Api.V2.Controllers
         [HttpGet]
         public async Task<IEnumerable<TransacaoViewModel>> Get()
         {
-            return _mapper.Map<IEnumerable<TransacaoViewModel>>(await _repositorio.Buscar(c => c.UsuarioId == AppUser.GetId()));
+            return _mapper.Map<IEnumerable<TransacaoViewModel>>(await _repositorio.BuscarCompleto(c => c.UsuarioId == AppUser.GetId()));
         }
 
-        [HttpGet("id:guid")]
+        [HttpGet("{id:guid}")]
         public async Task<ActionResult<TransacaoViewModel>> Get(Guid id)
         {
-            var transacao = await _repositorio.ObterPorId(id);
+            var transacao = await _repositorio.ObterCompletoPorId(id);
 
             if (transacao != null && transacao.UsuarioId != AppUser.GetId())
             {
@@ -61,7 +61,7 @@ namespace GestaoContas.Api.V2.Controllers
 
             return CustomResponse(model);
         }
-        [HttpPut("id:guid")]
+        [HttpPut("{id:guid}")]
         public async Task<ActionResult<TransacaoAtualizarViewModel>> Put(Guid id, TransacaoAtualizarViewModel model)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
@@ -79,7 +79,7 @@ namespace GestaoContas.Api.V2.Controllers
         }
 
 
-        [HttpDelete("id:guid")]
+        [HttpDelete("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> Delete(Guid id)
         {
@@ -92,24 +92,19 @@ namespace GestaoContas.Api.V2.Controllers
         [HttpGet("Busca")]
         public async Task<IEnumerable<TransacaoViewModel>> Get([FromQuery]TransacaoFiltroViewModel busca)
         {
-            Expression<Func<Transacao, bool>> predicate = e => true;
+            var e = await _repositorio.BuscarCompleto(
+                t=>
+                t.UsuarioId.Equals(AppUser.GetId())
+                && (!busca.Tipo.HasValue || (busca.Tipo.HasValue && t.TipoTransacao.Equals((TipoTransacao)busca.Tipo.Value)))
+                &&(!busca.DataInicial.HasValue || (busca.DataInicial.HasValue && t.Data.HasValue && t.Data.Value.Date >= busca.DataInicial.Value.Date))
+                &&(!busca.DataFinal.HasValue || (busca.DataFinal.HasValue && t.Data.HasValue && t.Data.Value.Date <= busca.DataFinal.Value.Date))
+                && (!busca.ValorInicial.HasValue || (busca.ValorInicial.HasValue && t.Valor >= busca.ValorInicial.Value))
+                &&(!busca.ValorFinal.HasValue || (busca.ValorFinal.HasValue && t.Valor <= busca.ValorFinal.Value))
+                &&(!busca.CategoriaId.HasValue || (busca.CategoriaId.HasValue && t.CategoriaId.Equals(busca.CategoriaId.Value)))
+                &&(!busca.Tipo.HasValue ||(busca.Tipo.HasValue && t.TipoTransacao.Equals((TipoTransacao)busca.Tipo.Value)))
+                );
 
-            predicate = predicate.And(t => t.UsuarioId.Equals(AppUser.GetId()));
-
-            if (busca.DataInicial.HasValue)
-                predicate = predicate.And(t => t.Data.HasValue && t.Data.Value.Date >= busca.DataInicial.Value.Date);
-            if (busca.DataFinal.HasValue)
-                predicate = predicate.And(t => t.Data.HasValue && t.Data.Value.Date <= busca.DataFinal.Value.Date);
-            if (busca.ValorInicial.HasValue)
-                predicate = predicate.And(t => t.Valor >= busca.ValorInicial.Value);
-            if (busca.ValorFinal.HasValue)
-                predicate = predicate.And(t => t.Valor <= busca.ValorFinal.Value);
-            if (busca.CategoriaId.HasValue)
-                predicate = predicate.And(t => t.CategoriaId == busca.CategoriaId.Value);
-            if (busca.Tipo.HasValue)
-                predicate = predicate.And(t => t.TipoTransacao == (TipoTransacao)busca.Tipo.Value);
-
-            return _mapper.Map<IEnumerable<TransacaoViewModel>>(await _repositorio.Buscar(predicate));
+            return _mapper.Map<IEnumerable<TransacaoViewModel>>(e);
         }
     }
 }

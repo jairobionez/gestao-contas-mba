@@ -177,17 +177,17 @@ namespace GestaoContas.Api.V1.Controllers
 
         
         [HttpGet("resumo/{dataInicial:datetime}/{dataFinal:datetime}")]
-        public async Task<ActionResult<ResumoTransacaoViewModel>> Resumo(DateTime dataInicial, DateTime dataFinal)
+        public async Task<ActionResult<ResumoTransacaoViewModel>> Resumo(DateTime? dataInicial, DateTime? dataFinal)
         {
             var transacoes = await _context.Transacoes
                 .Where(t => t.Data >= dataInicial && t.Data <= dataFinal)
                 .ToListAsync();
 
-            decimal receitas = transacoes
+            decimal? receitas = transacoes
                 .Where(t => t.TipoTransacao == TipoTransacao.Entrada)
                 .Sum(t => t.Valor);
 
-            decimal despesas = transacoes
+            decimal? despesas = transacoes
                 .Where(t => t.TipoTransacao == TipoTransacao.Saida)
                 .Sum(t => t.Valor);
 

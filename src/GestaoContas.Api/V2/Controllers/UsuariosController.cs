@@ -37,7 +37,7 @@ namespace GestaoContas.Api.V2.Controllers
         }
 
         
-        [HttpGet("id:guid")]
+        [HttpGet("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]        
