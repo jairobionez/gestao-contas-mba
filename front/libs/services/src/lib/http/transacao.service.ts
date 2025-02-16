@@ -19,13 +19,14 @@ export class TransacaoService {
   getByFilters(busca: TransacaoFiltroModel): Observable<TransacaoResponseModel[]> {
     let dataInicial = null;
     let dataFinal = null;
+    console.log();
     if (busca.dataInicial != null) {
-      dataInicial =`${busca.dataInicial.getFullYear()}-${busca.dataInicial.getMonth()}-${busca.dataInicial.getDay()}`;    
+      dataInicial = dateCustomFormatting(busca.dataInicial); //`${busca.dataInicial.getFullYear()}-${busca.dataInicial.getMonth()}-${busca.dataInicial.getDay()}`;    
     }
     if (busca.dataFinal != null) {
-      dataFinal =`${busca.dataFinal.getFullYear()}-${busca.dataFinal.getMonth()}-${busca.dataFinal.getDay()}`;    
+      dataFinal = dateCustomFormatting(busca.dataFinal); //`${busca.dataFinal.getFullYear()}-${busca.dataFinal.getMonth()}-${busca.dataFinal.getDay()}`;    
     }    
-    return this.httpCliente.get<TransacaoResponseModel[]>(`${environment.apiBase}/transacoes/filtro/?dataInicial=${dataInicial}&dataFinal=${dataFinal}&categoriaId=${busca.categoriaId}&tipo=${busca.tipo}`);
+    return this.httpCliente.get<TransacaoResponseModel[]>(`${environment.apiBase}/transacoes/Busca/?dataInicial=${dataInicial}&dataFinal=${dataFinal}&categoriaId=${busca.categoriaId}&tipo=${busca.tipo}`);
   }
 
   getById(transacoId: any): Observable<TransacaoResponseModel> {
@@ -43,4 +44,12 @@ export class TransacaoService {
   delete(transacoId: any): Observable<TransacaoResponseModel> {
     return this.httpCliente.delete<TransacaoResponseModel>(`${environment.apiBase}/transacoes/${transacoId}`);
   }
+}
+
+function dateCustomFormatting(date: Date): string {
+  const padStart = (value: number): string =>
+      value.toString().padStart(2, '0');
+  return `${padStart(date.getFullYear())}-
+          ${padStart(date.getMonth() + 1)}-
+      ${date.getDate()}`;
 }

@@ -55,18 +55,14 @@ export class ListaTransacaoComponent implements OnInit {
         take(1),
         filter(data => data))
       .subscribe(nova => {
-        this.transacaoService.post(nova)
-              .pipe()
-              .subscribe(_ => {
-                this._snackBar.openFromComponent(AlertComponent, {
-                  duration: 5000,
-                  data: {
-                    title: 'Sucesso!',
-                    subtitle: 'Transação criada',
-                    status: 'sucesso'
-                  } as AlertOptions
-                });
-              });
+        this._snackBar.openFromComponent(AlertComponent, {
+          duration: 5000000,
+          data: {
+            title: 'Sucesso!',
+            subtitle: 'Transação alterada',
+            status: 'sucesso'
+          } as AlertOptions
+        });
         this.buscar();
       });
   }
@@ -126,7 +122,6 @@ export class ListaTransacaoComponent implements OnInit {
 
   buscar(): void {
     const { valid, value } = this.form;
-    console.log(this.form);
     this.transacaoService.getByFilters(value)
     .pipe(take(1))
       .subscribe(data => {

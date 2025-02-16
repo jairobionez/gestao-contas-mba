@@ -36,7 +36,7 @@
             <div class="col-6">
                 <mat-form-field class="example-full-width custom-form-field" appearance="outline">
                     <mat-label>Valor R$</mat-label>
-                    <input matInput formControlName="valor" type="number" />
+                    <input matInput formControlName="valor" />
                     <mat-error>{{form.valor?.errors! | validationMessage}}</mat-error>
                 </mat-form-field>
             </div>
@@ -46,7 +46,6 @@
                 <mat-form-field class="example-full-width custom-form-field" appearance="outline">
                     <mat-label>Data</mat-label>
                     <input matInput [matDatepicker]="picker" formControlName="data">
-                    <mat-hint>MM/DD/YYYY</mat-hint>
                     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                     <mat-error>{{form.data?.errors! | validationMessage}}</mat-error>
