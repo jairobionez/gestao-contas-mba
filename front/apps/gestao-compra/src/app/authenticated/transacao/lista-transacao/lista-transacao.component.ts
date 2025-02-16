@@ -4,8 +4,9 @@ import { CreateEditTransacaoComponent } from '../create-edit-transacao/create-ed
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AlertComponent, AlertOptions, ModalInfoComponent, ModalInfoModel } from '@front/components';
-import { filter, take } from 'rxjs';
+import { filter, switchMap, take } from 'rxjs';
 import { TransacaoService, CategoriaService } from '@front/services';
+import { TransacaoFiltroFormGroup } from '@front/forms';
 
 @Component({
   selector: 'app-lista-transacao',
@@ -17,7 +18,9 @@ export class ListaTransacaoComponent implements OnInit {
   readonly dialog = inject(MatDialog);
   private _snackBar = inject(MatSnackBar);
 
-  displayedColumns: string[] = ['tipo', 'categoria', 'valor', 'descricao', 'acoes'];
+  form: TransacaoFiltroFormGroup;
+
+  displayedColumns: string[] = ['tipo', 'categoria', 'data', 'valor', 'descricao', 'acoes'];
 
   tiposSelecionados = [0,1];
 
@@ -29,7 +32,7 @@ export class ListaTransacaoComponent implements OnInit {
     private categoriaService: CategoriaService,
     private transacaoService: TransacaoService,
   ) {
-
+    this.form = new TransacaoFiltroFormGroup(); 
   }
 
   ngOnInit(): void {
@@ -39,12 +42,8 @@ export class ListaTransacaoComponent implements OnInit {
         this.categorias = data;
       });
 
-    this.transacaoService.get()
-    .pipe(take(1))
-      .subscribe(data => {
-        this.transacoes = data;
-      });
-  }
+      this.buscar();
+  } 
 
   novaTransacao(): void {
     const ref = this.dialog.open(CreateEditTransacaoComponent, {
@@ -56,19 +55,15 @@ export class ListaTransacaoComponent implements OnInit {
         take(1),
         filter(data => data))
       .subscribe(nova => {
-        console.log(nova);
-        this.transacaoService.post(nova)
-              .pipe()
-              .subscribe(_ => {
-                this._snackBar.openFromComponent(AlertComponent, {
-                  duration: 5000,
-                  data: {
-                    title: 'Sucesso!',
-                    subtitle: 'Transação criada',
-                    status: 'sucesso'
-                  } as AlertOptions
-                });
-              });
+        this._snackBar.openFromComponent(AlertComponent, {
+          duration: 5000000,
+          data: {
+            title: 'Sucesso!',
+            subtitle: 'Transação alterada',
+            status: 'sucesso'
+          } as AlertOptions
+        });
+        this.buscar();
       });
   }
 
@@ -91,18 +86,46 @@ export class ListaTransacaoComponent implements OnInit {
                 status: 'sucesso'
               } as AlertOptions
             });
+            this.buscar();
           });
   }
 
-  removerTransacao(): void {
+  removerTransacao(transacaoId: any): void {
     const ref = this.dialog.open(ModalInfoComponent, {
           width: '50rem',
           data: {
-            titulo: 'Remover transação',
+            titulo: 'Remover Transação',
             texto: 'Esta ação não pode ser desfeita, deseja confirma-la?',
             btnOk: 'Confirmar',
             btnCancel: 'Voltar'
           } as ModalInfoModel
         });
+
+        ref.afterClosed()
+          .pipe(
+            take(1),
+            filter(data => data),
+          switchMap(data => this.transacaoService.delete(transacaoId)))
+          .subscribe(_ => {
+            this._snackBar.openFromComponent(AlertComponent, {
+              duration: 5000,
+              data: {
+                title: 'Sucesso!',
+                subtitle: 'Categoria removida',
+                status: 'sucesso'
+              } as AlertOptions
+            });
+
+            this.buscar();
+          });
+  }
+
+  buscar(): void {
+    const { valid, value } = this.form;
+    this.transacaoService.getByFilters(value)
+    .pipe(take(1))
+      .subscribe(data => {
+        this.transacoes = data;
+      });
   }
 }

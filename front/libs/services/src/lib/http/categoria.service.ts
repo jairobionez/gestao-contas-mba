@@ -17,7 +17,7 @@ export class CategoriaService {
   }
 
   getAtivos(): Observable<CategoriaResponseModel[]> {
-    return this.httpCliente.get<CategoriaResponseModel[]>(`${environment.apiBase}/categorias/ativos`);
+    return this.httpCliente.get<CategoriaResponseModel[]>(`${environment.apiBase}/categorias`);
   }
 
   getById(categoriaId: any): Observable<CategoriaResponseModel> {

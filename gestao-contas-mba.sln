@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GestaoContas.Api", "src\Ges
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GestaoContas.Shared", "src\GestaoContas.Shared\GestaoContas.Shared.csproj", "{3F1FF986-10B2-4723-B7E5-C0FD3934D1E0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestaoContas.Business", "src\GestaoContas.Business\GestaoContas.Business.csproj", "{F674FA8D-58E6-4F48-AEEE-F6D9B95CE8A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestaoContas.Data", "src\GestaoContas.Data\GestaoContas.Data.csproj", "{698ACFD4-60DE-48E6-BA89-119CB7DB61FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{3F1FF986-10B2-4723-B7E5-C0FD3934D1E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F1FF986-10B2-4723-B7E5-C0FD3934D1E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F1FF986-10B2-4723-B7E5-C0FD3934D1E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F674FA8D-58E6-4F48-AEEE-F6D9B95CE8A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F674FA8D-58E6-4F48-AEEE-F6D9B95CE8A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F674FA8D-58E6-4F48-AEEE-F6D9B95CE8A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F674FA8D-58E6-4F48-AEEE-F6D9B95CE8A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{698ACFD4-60DE-48E6-BA89-119CB7DB61FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{698ACFD4-60DE-48E6-BA89-119CB7DB61FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{698ACFD4-60DE-48E6-BA89-119CB7DB61FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{698ACFD4-60DE-48E6-BA89-119CB7DB61FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

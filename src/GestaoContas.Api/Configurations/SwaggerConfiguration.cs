@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ApiExplorer;
+﻿using Asp.Versioning.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -10,9 +11,16 @@ namespace GestaoContas.Api.Configurations
     {
         public static WebApplicationBuilder AddSwaggerConfiguration(this WebApplicationBuilder builder)
         {
+            //builder.Services.AddSwaggerGen(swagger => {
+            //    swagger.OperationFilter<SwaggerDefaultValues>();            
+            //});
+
+
             builder.Services.AddEndpointsApiExplorer();
+
             builder.Services.AddSwaggerGen(swagger =>
             {
+                swagger.OperationFilter<SwaggerDefaultValues>();
                 swagger.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = "Insira o token JWT neste formato : Bearer {TOKEN}",
@@ -42,16 +50,15 @@ namespace GestaoContas.Api.Configurations
         }
 
         public static IApplicationBuilder UseSwaggerConfig(this IApplicationBuilder app, IApiVersionDescriptionProvider provider)
-        {
-            //app.UseMiddleware<SwaggerAuthorizedMiddleware>();
+        {   
             app.UseSwagger();
             app.UseSwaggerUI(
                 options =>
-                {
+                {                    
                     foreach (var description in provider.ApiVersionDescriptions)
                     {
                         options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
-                    }
+                    }                    
                 });
             return app;
         }
@@ -71,14 +78,14 @@ namespace GestaoContas.Api.Configurations
             }
         }
 
-        static OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)
+        private OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)
         {
             var info = new OpenApiInfo()
             {
-                Title = "API - desenvolvedor.io",
+                Title = "API - Gestão contas",
                 Version = description.ApiVersion.ToString(),
-                Description = "Esta API faz parte do curso REST com ASP.NET Core WebAPI.",
-                Contact = new OpenApiContact() { Name = "Eduardo Pires", Email = "contato@desenvolvedor.io" },
+                Description = "Esta API faz parte projeto do módulo Desenvolvimento Full-Stack Avançado com ASP.NET Core do MBA DEVXPERT FULL STACK .NET.",
+                //Contact = new OpenApiContact() { Name = "Eduardo Pires", Email = "contato@desenvolvedor.io" },
                 License = new OpenApiLicense() { Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT") }
             };
 
@@ -129,6 +136,7 @@ namespace GestaoContas.Api.Configurations
         }
     }
 
+    //Precisa ver isso: Autorizar o Swagger
     public class SwaggerAuthorizedMiddleware
     {
         private readonly RequestDelegate _next;
@@ -141,7 +149,7 @@ namespace GestaoContas.Api.Configurations
         public async Task Invoke(HttpContext context)
         {
             if (context.Request.Path.StartsWithSegments("/swagger")
-                && !context.User.Identity.IsAuthenticated)
+                && !context.User.Identity!.IsAuthenticated)
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 return;

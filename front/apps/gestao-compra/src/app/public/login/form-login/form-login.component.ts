@@ -37,7 +37,8 @@ export class FormLoginComponent implements OnInit {
       .pipe(take(1))
       .subscribe(token => {
         if(token) {
-          this.authService.setToken(token);
+          console.log(token);
+          this.authService.setToken(token.data.accessToken);
           this.authService.setUrl('inicio');
           this.router.navigate(['inicio']);
         }

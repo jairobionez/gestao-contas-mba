@@ -1,26 +1,22 @@
 ﻿using AutoMapper;
 using GestaoContas.Api.Controllers;
 using GestaoContas.Api.V1.ViewModels.Transacao;
-using GestaoContas.Shared.Data.Contexts;
-using GestaoContas.Shared.Domain;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Http;
 using GestaoContas.Api.Extensions.Authorizations;
-using GestaoContas.Shared.Extensions;
+using GestaoContas.Business.Models;
+using GestaoContas.Data.Contexts;
+using GestaoContas.Business.Interfaces;
+using Asp.Versioning;
 
 namespace GestaoContas.Api.V1.Controllers
-{    
+{
     [ApiController]
-    [ApiVersion("1.0")]
+    [ApiVersion("1.0", Deprecated = true)]
     [Route("api/v{version:apiVersion}/transacoes")]
     public class TransacoesController : MainController
     {
-        private ApplicationDbContext _context;
-        private IMapper _mapper;
+        private ApplicationDbContext _context;        
 
         //private static List<TransacaoModel> _listMock = [
         //    new TransacaoModel { Data = DateTime.Now, Id = Guid.NewGuid(), Descricao = "Almoço 25/01/2025", Tipo = TipoTransacao.Saida, Valor = 50, Categoria = CategoriasController.CategoriasMock.FirstOrDefault(x => x.Id == Guid.Parse("5317b802-cf9e-4227-abd1-4f30168b4573")) },
@@ -32,10 +28,12 @@ namespace GestaoContas.Api.V1.Controllers
 
         public TransacoesController(
             ApplicationDbContext context,
-            IMapper mapper) : base()
+            IMapper mapper,
+            INotificador notificador,
+            IUser appUser) 
+            : base(notificador, mapper, appUser)
         {
-            _context = context;
-            _mapper = mapper;
+            _context = context;            
         }
 
         //public TransacoesController(INotificador notificador, IUser appUser) : base(notificador, appUser)
@@ -47,22 +45,25 @@ namespace GestaoContas.Api.V1.Controllers
         public async Task<IEnumerable<TransacaoViewModel>> Get()
         {
             //return _listMock;
-            return _mapper.Map<IEnumerable<TransacaoViewModel>>(await _context.Transacoes.ToListAsync());
+            return _mapper.Map<IEnumerable<TransacaoViewModel>>(await _context.Transacoes.Include(x => x.Categoria).ToListAsync());
         }
 
         [HttpGet("filtro")]
-        public async Task<IEnumerable<TransacaoViewModel>> Get(DateTime? data, Guid? categoriaId, GestaoContas.Shared.Domain.TipoTransacao? tipo)
+        public async Task<IEnumerable<TransacaoViewModel>> Get(DateTime? dataInicial, DateTime? dataFinal, Guid? categoriaId, TipoTransacao? tipo)
         {
-            var query = _context.Transacoes.AsQueryable();
+            var query = _context.Transacoes.Include(x => x.Categoria).AsQueryable();
 
-            if (data.HasValue)
-                query = query.Where(t => t.Data.HasValue && t.Data.Value.Date == data.Value.Date);
+            if (dataInicial.HasValue)
+                query = query.Where(t => t.Data.HasValue && t.Data.Value.Date >= dataInicial.Value.Date);
+
+            if (dataFinal.HasValue)
+                query = query.Where(t => t.Data.HasValue && t.Data.Value.Date <= dataFinal.Value.Date);
 
             if (categoriaId.HasValue)
                 query = query.Where(t => t.CategoriaId == categoriaId.Value);
 
             if (tipo.HasValue)
-                query = query.Where(t => t.TipoTransacao == (Shared.Domain.TipoTransacao)tipo.Value);
+                query = query.Where(t => t.TipoTransacao == (TipoTransacao)tipo.Value);
 
             var transacoes = await query.ToListAsync();
             return _mapper.Map<IEnumerable<TransacaoViewModel>>(transacoes);
@@ -70,7 +71,7 @@ namespace GestaoContas.Api.V1.Controllers
 
         
         [HttpPost("busca")]
-        public async Task<IEnumerable<TransacaoViewModel>> Get(FiltroTransacaoViewModel busca)
+        public async Task<IEnumerable<TransacaoViewModel>> Post(FiltroTransacaoViewModel busca)
         {
             var query = _context.Transacoes.AsQueryable();
             if (busca.DataInicial.HasValue)
@@ -89,7 +90,7 @@ namespace GestaoContas.Api.V1.Controllers
                 query = query.Where(t => t.CategoriaId == busca.CategoriaId.Value);
 
             if (busca.Tipo.HasValue)
-                query = query.Where(t => t.TipoTransacao == (Shared.Domain.TipoTransacao)busca.Tipo.Value);
+                query = query.Where(t => t.TipoTransacao == (TipoTransacao)busca.Tipo.Value);
 
             var transacoes = await query.ToListAsync();
             return _mapper.Map<IEnumerable<TransacaoViewModel>>(transacoes);
@@ -115,13 +116,12 @@ namespace GestaoContas.Api.V1.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary), StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<TransacaoViewModel>> Adicionar(TransacaoViewModel transacaoViewModel)
+        public async Task<ActionResult<TransacaoViewModel>> Adicionar(TransacaoCriarViewModel transacaoViewModel)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var novaTransacao = _mapper.Map<Transacao>(transacaoViewModel);
-            novaTransacao.Id = Guid.NewGuid(); 
+            var novaTransacao = new Transacao(transacaoViewModel.Tipo, transacaoViewModel.Valor, transacaoViewModel.Data, transacaoViewModel.Descricao, transacaoViewModel.CategoriaId, AppUser.GetId()); //_mapper.Map<Transacao>(transacaoViewModel);
 
             _context.Transacoes.Add(novaTransacao);
             await _context.SaveChangesAsync();
@@ -136,7 +136,7 @@ namespace GestaoContas.Api.V1.Controllers
         [ProducesResponseType(typeof(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<TransacaoViewModel>> Atualizar(Guid id, TransacaoViewModel transacaoViewModel)
+        public async Task<ActionResult<TransacaoViewModel>> Atualizar(Guid id, TransacaoEditarViewModel transacaoViewModel)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -146,9 +146,12 @@ namespace GestaoContas.Api.V1.Controllers
             if (transacaoExistente == null)
                 return NotFound("Transação não encontrada.");
 
-            _mapper.Map(transacaoViewModel, transacaoExistente);
 
-            _context.Transacoes.Update(transacaoExistente);
+            var transacao = new Transacao(transacaoViewModel.Id, transacaoViewModel.TipoTransacao, transacaoViewModel.Valor, transacaoViewModel.Data, transacaoViewModel.Descricao, transacaoViewModel.CategoriaId, AppUser.GetId());
+
+            //_mapper.Map(transacaoViewModel, transacaoExistente);
+
+            _context.Transacoes.Update(transacao);
             await _context.SaveChangesAsync();
 
             return Ok(_mapper.Map<TransacaoViewModel>(transacaoExistente));
@@ -174,18 +177,18 @@ namespace GestaoContas.Api.V1.Controllers
 
         
         [HttpGet("resumo/{dataInicial:datetime}/{dataFinal:datetime}")]
-        public async Task<ActionResult<ResumoTransacaoViewModel>> Resumo(DateTime dataInicial, DateTime dataFinal)
+        public async Task<ActionResult<ResumoTransacaoViewModel>> Resumo(DateTime? dataInicial, DateTime? dataFinal)
         {
             var transacoes = await _context.Transacoes
                 .Where(t => t.Data >= dataInicial && t.Data <= dataFinal)
                 .ToListAsync();
 
-            decimal receitas = transacoes
-                .Where(t => t.TipoTransacao == Shared.Domain.TipoTransacao.Entrada)
+            decimal? receitas = transacoes
+                .Where(t => t.TipoTransacao == TipoTransacao.Entrada)
                 .Sum(t => t.Valor);
 
-            decimal despesas = transacoes
-                .Where(t => t.TipoTransacao == Shared.Domain.TipoTransacao.Saida)
+            decimal? despesas = transacoes
+                .Where(t => t.TipoTransacao == TipoTransacao.Saida)
                 .Sum(t => t.Valor);
 
             var resumo = new ResumoTransacaoViewModel

@@ -1,29 +1,32 @@
-﻿using AutoMapper;
+﻿using Asp.Versioning;
+using AutoMapper;
 using GestaoContas.Api.Controllers;
 using GestaoContas.Api.Extensions.Authorizations;
 using GestaoContas.Api.V1.ViewModels.Orcamento;
-using GestaoContas.Shared.Data.Contexts;
-using GestaoContas.Shared.Domain;
-using GestaoContas.Shared.Extensions;
+using GestaoContas.Business.Interfaces;
+using GestaoContas.Business.Models;
+using GestaoContas.Data.Contexts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http;
 
 namespace GestaoContas.Api.V1.Controllers
-{    
+{
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/orcamentos")]
     public class OrcamentosController : MainController
     {
-        private readonly ApplicationDbContext _context;
-        private readonly IMapper _mapper;
+        private readonly ApplicationDbContext _context;        
 
-        public OrcamentosController(ApplicationDbContext context, IMapper mapper)
+        public OrcamentosController(
+            ApplicationDbContext context, 
+            IMapper mapper,
+            INotificador notificador, 
+            IUser appUser) 
+            :base(notificador, mapper, appUser)
         {
-            _context = context;
-            _mapper = mapper;
+            _context = context;            
         }
 
         [AllowAnonymous]

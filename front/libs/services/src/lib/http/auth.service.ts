@@ -27,8 +27,8 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
-  login(model: LoginModel): Observable<string> {
-    return this.http.post(`${this.apiBase}/login`, model, { responseType: 'text' });
+  login(model: LoginModel): Observable<any> {
+    return this.http.post(`${this.apiBase}/login`, model, { responseType: 'json' });
   }
 
   public isLoggedIn() {
