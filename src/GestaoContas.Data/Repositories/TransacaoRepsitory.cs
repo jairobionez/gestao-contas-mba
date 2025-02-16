@@ -21,5 +21,10 @@ namespace GestaoContas.Data.Repositories
         {
             return await _dbSet.AsNoTracking().Include(t=>t.Categoria).FirstOrDefaultAsync(t=>t.Id.Equals(id));
         }
+
+        public IQueryable<Transacao> BuscarCompletoQuery()
+        {
+            return _dbSet.Include(p => p.Categoria).AsQueryable();
+        }
     }
 }

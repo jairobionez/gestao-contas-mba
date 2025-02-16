@@ -1,5 +1,6 @@
 ﻿using GestaoContas.Business.Interfaces;
 using GestaoContas.Business.Models;
+using GestaoContas.Business.Models.DTOs;
 using GestaoContas.Business.Models.Validations;
 
 namespace GestaoContas.Business.Services
@@ -111,6 +112,48 @@ namespace GestaoContas.Business.Services
 
             await _transacaoRepository.Remover(id);
             return true;
+        }
+
+        public async Task<DashboardDTO>? GetDadosDash(Guid usuarioId, DateTime dataInicial, DateTime dataFim)
+        {
+            var dash = new DashboardDTO();
+
+            var transacoes = _transacaoRepository.BuscarCompletoQuery().Where(p => p.UsuarioId == usuarioId &&
+                                                                              p.Data.Value.Date >= dataInicial.Date &&
+                                                                              p.Data.Value.Date <= dataFim);
+
+            if (transacoes == null || transacoes.Count() == 0)
+            {
+                Notificar("Não foi encontrado nenhuma transação para o período indicado!");
+                return null;
+            }
+
+            var entradas = transacoes.Where(p => p.TipoTransacao == TipoTransacao.Entrada);
+            var saidas = transacoes.Where(p => p.TipoTransacao == TipoTransacao.Saida);
+
+            var totalEntradas = entradas.Count() > 0 ? entradas.Sum(p => (double)p.Valor) : 0;
+            dash.TotalEntradas = (decimal)totalEntradas;
+            var totalSaidas = saidas.Count() > 0 ? saidas.Sum(p => (double)p.Valor) : 0;
+            dash.TotalSaidas = (decimal)totalSaidas;
+
+            TimeSpan diferenca = dataFim - dataInicial;
+            int diferencaEmDias = (int)diferenca.TotalDays;
+
+            dash.MediaGastosDiarios = dash.TotalSaidas > 0 ? dash.TotalSaidas / diferencaEmDias : 0;
+
+            var categoriasAgrupadas = saidas.GroupBy(p => p.CategoriaId);
+            var categorias = new List<CategoriaGastoDTO>();
+            
+            foreach (var categoriaTransacao in categoriasAgrupadas)
+            {
+                var total = categoriaTransacao.Sum(p => (double)p.Valor);
+                var categoria = new CategoriaGastoDTO(categoriaTransacao.FirstOrDefault().Categoria.Nome, (decimal)total);
+                categorias.Add(categoria);
+            }
+
+            dash.CategoriasGasto = categorias;
+
+            return await Task.FromResult(dash);
         }
     }
 }
