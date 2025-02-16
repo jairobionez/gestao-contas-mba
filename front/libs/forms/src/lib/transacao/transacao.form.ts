@@ -36,7 +36,7 @@ export class TransacaoFormGroup extends FormGroupBase {
       tipoTransacao: fb.control(0, Validators.required),
       categoriaId: fb.control('', Validators.required),
       valor: fb.control(0, Validators.required),
-      data: fb.control('' , Validators.required),
+      data: fb.control(new Date() , Validators.required),
       descricao: fb.control('')
     });
   }
