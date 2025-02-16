@@ -31,16 +31,16 @@ namespace GestaoContas.Api.V2.Controllers
         [HttpGet]        
         public async Task<IEnumerable<CategoriaViewModel>> Get()
         {
-            return _mapper.Map<IEnumerable<CategoriaViewModel>>(await _repository.Buscar(c=>c.UsuarioId == AppUser.GetId() || c.Padrao));
+            return _mapper.Map<IEnumerable<CategoriaViewModel>>(await _repository.Buscar(c=> (c.UsuarioId != null && c.UsuarioId == AppUser.GetId()) || c.Padrao));
         }
 
         
-        [HttpGet("id:guid")]        
+        [HttpGet("{id:guid}")]        
         public async Task<ActionResult<CategoriaViewModel>> Get(Guid id)
         {
             var categoria = await _repository.ObterPorId(id);
 
-            if(categoria!= null && categoria.UsuarioId != AppUser.GetId())
+            if(categoria!= null && ((categoria.UsuarioId!=null && categoria.UsuarioId != AppUser.GetId()) || !categoria.Padrao))
             {
                 NotificarErro("Esta categoria não foi cadastrada por você, nem é uma categoria padrão.");
                 return CustomResponse();
@@ -62,7 +62,7 @@ namespace GestaoContas.Api.V2.Controllers
         }
 
         
-        [HttpPut("id:guid")]        
+        [HttpPut("{id:guid}")]        
         public async Task<ActionResult<CategoriaAtualizarViewModel>> Put(Guid id, CategoriaAtualizarViewModel model)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
@@ -80,7 +80,7 @@ namespace GestaoContas.Api.V2.Controllers
         }
 
         
-        [HttpDelete("id:guid")]        
+        [HttpDelete("{id:guid}")]        
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> Delete(Guid id)
         {            
