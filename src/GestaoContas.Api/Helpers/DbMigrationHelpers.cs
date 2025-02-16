@@ -132,9 +132,9 @@ namespace GestaoContas.Api.Helpers
                 {
                     await context.Orcamentos.AddRangeAsync(new List<Orcamento>
                     {
-                        new Orcamento(1,2025,1000M,categoriaOneId,adminId),
-                        new Orcamento(2,2025,150M,categoriaTwoId,adminId),
-                        new Orcamento(3,2025,500M,categoriaOneId,userId)
+                        new Orcamento(1000M,categoriaOneId,adminId),
+                        new Orcamento(150M,categoriaTwoId,adminId),
+                        new Orcamento(500M,categoriaOneId,userId)
 
                     });
                 }
