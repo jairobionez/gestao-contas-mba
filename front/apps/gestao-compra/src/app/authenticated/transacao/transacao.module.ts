@@ -12,7 +12,7 @@ import { MatDialogModule } from "@angular/material/dialog";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { MatSelectModule } from "@angular/material/select";
 import { CreateEditTransacaoComponent } from "./create-edit-transacao/create-edit-transacao.component";
-import { MatNativeDateModule } from "@angular/material/core";
+import { MAT_DATE_LOCALE, MatNativeDateModule } from "@angular/material/core";
 import { CategoriaService, TransacaoService } from "@front/services";
 import { CommonModule, DatePipe, DecimalPipe } from "@angular/common";
 import { MatDatepickerModule } from "@angular/material/datepicker";
@@ -36,6 +36,6 @@ import { MatDatepickerModule } from "@angular/material/datepicker";
   ],
   exports: [],
   declarations: [TransacaoComponent, ListaTransacaoComponent, CreateEditTransacaoComponent],
-  providers: [CategoriaService, TransacaoService],
+  providers: [CategoriaService, TransacaoService, {provide: MAT_DATE_LOCALE, useValue: 'pt-BR'},],
 })
 export class TransacaoModule { }

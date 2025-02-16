@@ -45,7 +45,6 @@ export class CreateEditTransacaoComponent implements OnInit {
 
   salvar(): void {
     const { valid, value } = this.form;
-
     if(valid && this.data?.id) {
       this.transacaoService.put(this.data.id, value)
       .pipe(take(1))
@@ -65,7 +64,4 @@ export class CreateEditTransacaoComponent implements OnInit {
     this.dialogRef.close(false);
   }
 
-  formatValor() : string {
-    return '10,56';
-  }
 }
