@@ -21,7 +21,7 @@
         }
 
         public TipoTransacao? TipoTransacao { get; private set; }
-        public decimal? Valor { get; private set; }
+        public decimal Valor { get; private set; }
         public DateTime? Data { get; private set; } 
         public string? Descricao { get; private set; }
         public Guid CategoriaId { get; private set; }

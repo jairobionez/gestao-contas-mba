@@ -6,6 +6,7 @@ using GestaoContas.Api.V1.ViewModels.Usuarios;
 using GestaoContas.Api.V2.ViewModels.Categorias;
 using GestaoContas.Api.V2.ViewModels.Transacoes;
 using GestaoContas.Api.V2.ViewModels.Usuarios;
+using GestaoContas.Api.V2.ViewModels.Orcamento;
 using GestaoContas.Business.Models;
 
 namespace GestaoContas.Api.Configurations
@@ -20,7 +21,7 @@ namespace GestaoContas.Api.Configurations
             CreateMap<Categoria, CategoriaCriarViewModel>().ReverseMap();
             CreateMap<Categoria, CategoriaEditarViewModel>().ReverseMap();
             CreateMap<Transacao, V1.ViewModels.Transacao.TransacaoViewModel>().ReverseMap();
-            CreateMap<Orcamento, OrcamentoViewModel>()
+            CreateMap<Orcamento, V1.ViewModels.Orcamento.OrcamentoViewModel>()
             .ForMember(dest => dest.CategoriaNome, opt => opt.MapFrom(src => src.Categoria!.Nome))
             .ForMember(dest => dest.UsuarioNome, opt => opt.MapFrom(src => src.Usuario!.Nome));
 
@@ -36,6 +37,11 @@ namespace GestaoContas.Api.Configurations
             CreateMap<Transacao, V2.ViewModels.Transacoes.TransacaoViewModel>();
             CreateMap<TransacaoCadastrarViewModel, Transacao>();
             CreateMap<TransacaoAtualizarViewModel, Transacao>();
+            CreateMap<Orcamento, V2.ViewModels.Orcamento.OrcamentoViewModel>()
+                 .ForMember(dest => dest.CategoriaNome, opt => opt.MapFrom(src => src.Categoria != null ? src.Categoria.Nome : "Sem categoria"))
+                 .ForMember(dest => dest.UsuarioNome, opt => opt.MapFrom(src => src.Usuario != null ? src.Usuario.Nome : "Usuário desconhecido"));
+
+            CreateMap<V2.ViewModels.Orcamento.OrcamentoViewModel, Orcamento>();
         }
     }
 }

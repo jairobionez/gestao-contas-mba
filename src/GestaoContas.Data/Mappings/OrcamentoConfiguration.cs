@@ -11,14 +11,6 @@ namespace GestaoContas.Data.Mappings
             builder.ToTable("Orcamentos");
             builder.HasKey(o => o.Id);
 
-            builder.Property(o => o.Mes)
-                .IsRequired()
-                .HasColumnType("INTEGER");
-
-            builder.Property(o => o.Ano)
-                .IsRequired()
-                .HasColumnType("INTEGER");
-
             builder.Property(o => o.Limite)
                 .IsRequired()
                 .HasColumnType("decimal(18,2)");
