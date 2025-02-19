@@ -2,7 +2,7 @@
 {
     public class OrcamentoViewModel
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
         public decimal Limite { get; set; }
         public Guid? CategoriaId { get; set; }
         public Guid UsuarioId { get; set; }

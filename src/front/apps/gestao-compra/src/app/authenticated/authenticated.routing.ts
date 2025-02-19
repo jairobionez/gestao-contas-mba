@@ -29,6 +29,11 @@ const routes: Routes = [
           loadChildren: () =>
             import('./transacao/transacao.module').then((x) => x.TransacaoModule)
         },
+        {
+          path: 'orcamentos',
+          loadChildren: () =>
+            import('./orcamento/orcamento.module').then((x) => x.OrcamentoModule)
+        },
       ],
     },
   ];

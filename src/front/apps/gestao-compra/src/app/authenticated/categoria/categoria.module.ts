@@ -16,9 +16,9 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 @NgModule({
   imports: [CategoriaRouting, MatTableModule,
     MatInputModule,
-    ReactiveFormsModule,
     MatButtonModule,
     MatFormFieldModule,
+    ReactiveFormsModule,
     ValidationMessagePipe,
     MatDialogModule,
     MatSnackBarModule

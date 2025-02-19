@@ -27,6 +27,9 @@ export class MenuComponent {
       return true;
     else if (this.router.url.indexOf('transacoes') >= 0 && menu === 'transacoes')
       return true;
+    else if (this.router.url.indexOf('orcamentos') >= 0 && menu === 'orcamentos')
+      return true;
+
 
     return false;
   }
