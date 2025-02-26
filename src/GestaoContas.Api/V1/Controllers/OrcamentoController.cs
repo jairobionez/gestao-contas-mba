@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 namespace GestaoContas.Api.V1.Controllers
 {
     [ApiController]
-    [ApiVersion("1.0")]
+    [ApiVersion("1.0", Deprecated = true)]
     [Route("api/v{version:apiVersion}/orcamentos")]
     public class OrcamentosController : MainController
     {
