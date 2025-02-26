@@ -1,0 +1,50 @@
+<div class="filter-content">
+  <div class="d-flex align-items-center">
+    <mat-form-field class="example-full-width" appearance="outline">
+      <mat-label>Buscar orçamentos</mat-label>
+      <input matInput>
+      <!-- <mat-error>{{form.email?.errors! | validationMessage}}</mat-error> -->
+    </mat-form-field>
+  </div>
+  <div class="d-flex justify-content-end">
+    <button class="width-10" mat-flat-button (click)="novoOrcamento()">Novo orçamento</button>
+  </div>
+</div>
+
+<div class="table-content">
+<mat-table mat-table [dataSource]="orcamentos">
+<ng-container matColumnDef="categoria">
+  <mat-header-cell *matHeaderCellDef> Categoria </mat-header-cell>
+  <mat-cell *matCellDef="let element" data-label="Categoria"> {{element.categoriaNome}} </mat-cell>
+</ng-container>
+
+<ng-container matColumnDef="usuario">
+  <mat-header-cell *matHeaderCellDef> Usuário </mat-header-cell>
+  <mat-cell *matCellDef="let element" data-label="Usuário"> {{element.usuarioNome}} </mat-cell>
+</ng-container>
+
+<ng-container matColumnDef="limite">
+  <mat-header-cell *matHeaderCellDef> Limite </mat-header-cell>
+  <mat-cell *matCellDef="let element" data-label="Limite"> {{element.limite | currency}} </mat-cell>
+</ng-container>
+
+
+
+<ng-container matColumnDef="acoes">
+  <mat-header-cell *matHeaderCellDef> Ações </mat-header-cell>
+  <mat-cell *matCellDef="let element" data-label="Ações">
+    <span class="material-symbols-outlined cursor-pointer" (click)="editarOrcamento(element)">
+      edit
+    </span>
+
+    <span class="material-symbols-outlined cor-vermelho ms-2 cursor-pointer" (click)="removerOrcamento(element.id)">
+      delete
+    </span>
+  </mat-cell>
+</ng-container>
+
+
+<mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+<mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row >
+</mat-table>
+</div>

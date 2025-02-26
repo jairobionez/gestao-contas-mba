@@ -41,9 +41,18 @@
     <div class="menu-item" [routerLink]="['transacoes']">
       <div class="d-flex" [ngClass]="{'ativo': ativo('transacoes')}">
         <span class="material-symbols-outlined">
-          attach_money
+            shopping_cart_checkout
           </span>
         <p class="opcao font-16 ms-1">Transações</p>
+      </div>
+    </div>
+
+    <div class="menu-item" [routerLink]="['orcamentos']">
+      <div class="d-flex" [ngClass]="{'ativo': ativo('orcamentos')}">
+        <span class="material-symbols-outlined">
+          attach_money
+          </span>
+        <p class="opcao font-16 ms-1"> Orçamentos </p>
       </div>
     </div>
   </div>
