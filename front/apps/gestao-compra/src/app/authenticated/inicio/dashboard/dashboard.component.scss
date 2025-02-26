@@ -1,3 +1,22 @@
-.cor-texto{
+.cor-texto {
     color: #606060;
 }
+  
+.totalizador {
+    background: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+  
+.valor-positivo {
+    color: #28a745; // Verde para valores positivos
+}
+  
+.valor-negativo {
+    color: #dc3545; // Vermelho para valores negativos
+}
+  
+.card-body {
+    padding: 15px;
+}
+  

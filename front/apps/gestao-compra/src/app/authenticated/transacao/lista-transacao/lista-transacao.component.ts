@@ -8,6 +8,14 @@ import { filter, switchMap, take } from 'rxjs';
 import { TransacaoService, CategoriaService } from '@front/services';
 import { TransacaoFiltroFormGroup } from '@front/forms';
 
+const EXCEL_TYPE =
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+const EXCEL_EXTENSION = '.xlsx';
+
+import * as XLSX from 'xlsx';
+import * as moment from 'moment';
+import * as FileSaver from 'file-saver';
+
 @Component({
   selector: 'app-lista-transacao',
   templateUrl: 'lista-transacao.component.html',
@@ -22,7 +30,7 @@ export class ListaTransacaoComponent implements OnInit {
 
   displayedColumns: string[] = ['tipo', 'categoria', 'data', 'valor', 'descricao', 'acoes'];
 
-  tiposSelecionados = [0,1];
+  tiposSelecionados = [0, 1];
 
   categorias: CategoriaResponseModel[] = [];
 
@@ -32,7 +40,7 @@ export class ListaTransacaoComponent implements OnInit {
     private categoriaService: CategoriaService,
     private transacaoService: TransacaoService,
   ) {
-    this.form = new TransacaoFiltroFormGroup(); 
+    this.form = new TransacaoFiltroFormGroup();
   }
 
   ngOnInit(): void {
@@ -42,8 +50,8 @@ export class ListaTransacaoComponent implements OnInit {
         this.categorias = data;
       });
 
-      this.buscar();
-  } 
+    this.buscar();
+  }
 
   novaTransacao(): void {
     const ref = this.dialog.open(CreateEditTransacaoComponent, {
@@ -69,63 +77,126 @@ export class ListaTransacaoComponent implements OnInit {
 
   editarTransacao(transacao: TransacaoResponseModel): void {
     const ref = this.dialog.open(CreateEditTransacaoComponent, {
-          width: '50rem',
-          data: transacao
-        });
+      width: '50rem',
+      data: transacao
+    });
 
-        ref.afterClosed()
-          .pipe(
-            take(1),
-            filter(data => data))
-          .subscribe(_ => {
-            this._snackBar.openFromComponent(AlertComponent, {
-              duration: 5000000,
-              data: {
-                title: 'Sucesso!',
-                subtitle: 'Transação alterada',
-                status: 'sucesso'
-              } as AlertOptions
-            });
-            this.buscar();
-          });
+    ref.afterClosed()
+      .pipe(
+        take(1),
+        filter(data => data))
+      .subscribe(_ => {
+        this._snackBar.openFromComponent(AlertComponent, {
+          duration: 5000000,
+          data: {
+            title: 'Sucesso!',
+            subtitle: 'Transação alterada',
+            status: 'sucesso'
+          } as AlertOptions
+        });
+        this.buscar();
+      });
   }
 
   removerTransacao(transacaoId: any): void {
     const ref = this.dialog.open(ModalInfoComponent, {
-          width: '50rem',
+      width: '50rem',
+      data: {
+        titulo: 'Remover Transação',
+        texto: 'Esta ação não pode ser desfeita, deseja confirma-la?',
+        btnOk: 'Confirmar',
+        btnCancel: 'Voltar'
+      } as ModalInfoModel
+    });
+
+    ref.afterClosed()
+      .pipe(
+        take(1),
+        filter(data => data),
+        switchMap(data => this.transacaoService.delete(transacaoId)))
+      .subscribe(_ => {
+        this._snackBar.openFromComponent(AlertComponent, {
+          duration: 5000,
           data: {
-            titulo: 'Remover Transação',
-            texto: 'Esta ação não pode ser desfeita, deseja confirma-la?',
-            btnOk: 'Confirmar',
-            btnCancel: 'Voltar'
-          } as ModalInfoModel
+            title: 'Sucesso!',
+            subtitle: 'Categoria removida',
+            status: 'sucesso'
+          } as AlertOptions
         });
 
-        ref.afterClosed()
-          .pipe(
-            take(1),
-            filter(data => data),
-          switchMap(data => this.transacaoService.delete(transacaoId)))
-          .subscribe(_ => {
-            this._snackBar.openFromComponent(AlertComponent, {
-              duration: 5000,
-              data: {
-                title: 'Sucesso!',
-                subtitle: 'Categoria removida',
-                status: 'sucesso'
-              } as AlertOptions
-            });
-
-            this.buscar();
-          });
+        this.buscar();
+      });
   }
 
   buscar(): void {
     const { valid, value } = this.form;
     this.transacaoService.getByFilters(value)
-    .pipe(take(1))
+      .pipe(take(1))
       .subscribe(data => {
         this.transacoes = data;
       });
+  }
+
+
+  exportarTransacoes(): void {
+    const report: any[] = [];
+
+    this.transacoes.forEach((transacao: TransacaoResponseModel) => {
+      report.push({
+        Tipo: transacao.tipo == 0 ? "Entrada" : "Saída",
+        Categoria: transacao.categoria.nome,
+        Valor: transacao.valor,
+        Data: moment(transacao.data).format('DD/MM/yyyy'),
+        Descricacao: transacao.valor
+      });
+    });
+
+
+    const worksheet = XLSX.utils.json_to_sheet(report);
+
+    const wscols = [
+      { wch: 30 },
+      { wch: 30 },
+      { wch: 30 },
+      { wch: 20 },
+      { wch: 50 },
+    ];
+
+
+    worksheet['!cols'] = wscols;
+
+    const workbook = {
+      Sheets: { data: worksheet },
+      SheetNames: ['data'],
+    };
+
+    const headerStyle = {
+      font: { bold: true },
+    };
+
+    for (const col in worksheet) {
+      if (col.startsWith('A')) {
+        const cell = worksheet[col];
+        cell.s = headerStyle;
+      }
+    }
+
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
+
+    this.saveAsExcelFile(excelBuffer, `Transações`);
+  }
+
+  private saveAsExcelFile(buffer: any, fileName: string): void {
+    const data: Blob = new Blob([buffer], {
+      type: EXCEL_TYPE,
+    });
+
+    FileSaver.saveAs(
+      data,
+      fileName + '_' + moment().format('DD/MM/yyyy') + EXCEL_EXTENSION
+    );
   }
 }

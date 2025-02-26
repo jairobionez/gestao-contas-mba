@@ -1,4 +1,5 @@
 ﻿using GestaoContas.Business.Models;
+using GestaoContas.Business.Models.DTOs;
 
 namespace GestaoContas.Business.Interfaces
 {
