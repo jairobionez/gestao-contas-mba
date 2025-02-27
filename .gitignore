@@ -401,3 +401,7 @@ FodyWeavers.xsd
 src/GestaoContas.Shared/Data/Database/GestaoContas.db-wal
 src/GestaoContas.Shared/Data/Database/GestaoContas.db-shm
 src/GestaoContas.Shared/Data/Database/GestaoContas.db
+/src/GestaoContas.Data/Database
+src/GestaoContas.Data/Database/GestaoContas.db
+src/GestaoContas.Data/Database/GestaoContas.db-shm
+src/GestaoContas.Data/Database/GestaoContas.db-wal

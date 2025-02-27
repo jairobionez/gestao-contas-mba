@@ -16,8 +16,7 @@ namespace GestaoContas.Api.V2.Controllers
     public class OrcamentosController : MainController
     {
         private readonly IOrcamentoRepository _orcamentoRepository;
-        private readonly IOrcamentoService _orcamentoService;
-        private readonly IMapper _mapper;
+        private readonly IOrcamentoService _orcamentoService;        
 
         public OrcamentosController(
             INotificador notificador,
@@ -28,8 +27,7 @@ namespace GestaoContas.Api.V2.Controllers
             : base(notificador, mapper, appUser)
         {
             _orcamentoRepository = orcamentoRepository;
-            _orcamentoService = orcamentoService;
-            _mapper = mapper;
+            _orcamentoService = orcamentoService;            
         }
 
         [HttpGet]
