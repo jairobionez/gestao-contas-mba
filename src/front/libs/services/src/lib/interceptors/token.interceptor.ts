@@ -22,10 +22,10 @@ export const TokenInterceptor: HttpInterceptorFn = (req, next) => {
 
     switch (data?.status) {
       case 400:
-        handle.handleError([data.error.detail])
+        handle.handleError([data.error.errors])
         break;
       case 401:
-        handle.handleError([data.error.detail]);
+        handle.handleError([data.error.errors]);
         authService.logout();
         break;
       case 500:
