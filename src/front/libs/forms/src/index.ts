@@ -6,3 +6,4 @@ export * from './lib/validators/index';
 export * from './lib/categoria/index';
 export * from './lib/transacao/index';
 export * from './lib/orcamento/index';
+export * from './lib/inicio/index';

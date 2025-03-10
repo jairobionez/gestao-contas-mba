@@ -1,24 +1,57 @@
-<div class="d-flex">
-    <div class="d-flex align-items-center me-4">
-      <mat-form-field class="example-full-width" appearance="outline">
-        <mat-label>Data inicio</mat-label>
-        <input matInput type="date">
-      </mat-form-field>
+<div class="d-flex justify-content-between">
+  <div class="d-flex align-items-center me-4" [formGroup]="form">
+    <mat-form-field class="example-full-width" appearance="outline">
+      <mat-label>Data Inicial - Final</mat-label>
+      <mat-date-range-input [rangePicker]="picker">
+        <input matStartDate formControlName="dataInicial" placeholder="Data Inicial">
+        <input matEndDate formControlName="dataFinal" placeholder="Data Final">
+      </mat-date-range-input>              
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+  </div>
+
+  <button class="width-10 me-2" mat-flat-button (click)="getIndicadores()">Filtrar</button>
+</div>
+
+<div class="row mt-4">
+  <div class="col-md-3 col-sm-6">
+    <div class="card totalizador">
+      <div class="card-body text-center">
+        <h6 class="cor-texto">Total Entradas</h6>
+        <h4 class="valor-positivo">{{ totalEntradas | currency:'BRL' }}</h4>
+      </div>
     </div>
-    <div class="d-flex align-items-center">
-        <mat-form-field class="example-full-width" appearance="outline">
-          <mat-label>Data Fim</mat-label>
-          <input matInput type="date">
-        </mat-form-field>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <div class="card totalizador">
+      <div class="card-body text-center">
+        <h6 class="cor-texto">Total Saídas</h6>
+        <h4 class="valor-negativo">{{ totalSaidas | currency:'BRL' }}</h4>
+      </div>
     </div>
-    <!-- <div class="d-flex justify-content-end">
-      <button class="width-10" mat-flat-button>Exportar Gráficos</button>
-    </div> -->
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <div class="card totalizador">
+      <div class="card-body text-center">
+        <h6 class="cor-texto">Saldo no Período</h6>
+        <h4 [ngClass]="saldoTotal >= 0 ? 'valor-positivo' : 'valor-negativo'">{{ saldoTotal | currency:'BRL' }}</h4>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <div class="card totalizador">
+      <div class="card-body text-center">
+        <h6 class="cor-texto">Média de Gastos (por dia)</h6>
+        <h4 class="cor-texto">{{ mediaGastosDiarios | currency:'BRL' }}</h4>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="mt-5 row">
-    <div class="col-12">
-        <span class="d-flex justify-content-center font-20 font-600 cor-texto mb-2">Gastos por categoria</span>
-        <div echarts [options]="options" theme="macarons" class="demo-chart" style="height: calc(100svh - 30rem); width: 100%;"></div>
-    </div>
+  <div class="col-12">
+    <span class="d-flex justify-content-center font-20 font-600 cor-texto mb-2">Gastos por categoria <p class="font-20 cor-texto">(no período)</p></span>
+    <div echarts [options]="options" theme="macarons" class="demo-chart" style="height: calc(100svh - 30rem); width: 100%;"></div>
+  </div>
 </div>
